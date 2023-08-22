@@ -17,7 +17,7 @@
         }
         body
         {
-          background-color: red;
+          margin: 0%;
         }
 
         #map
@@ -25,44 +25,81 @@
           position: absolute;
           top: 0%;
           left: 0%;
+          opacity: 0.8;
         }
-        #titre
+
+        #map2
         {
-          position:absolute;
-          top:0%;
-          left: 20%;
-          font-size: 150px;
-          font-family: 'Roboto', sans-serif; 
+          position: absolute;
+          top: 0%;
+          left: 0%;
         }
 
         @font-face {
-        font-family: 'Roboto';
-        src: url("C:\\Users\\JME\Downloads\\cm-hakuna-cute-font-4076726\\Hakuna Regular.ttf") format("truetype"),
-         
-      }
+  font-family: 'Roboto';
+  src: url('Hakuna Regular.ttf') format('truetype');
+}
+
+#titre {
+  margin:0%;
+  font-size: 1000%;
+  font-family: 'Roboto', sans-serif;
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%); 
+  text-align: center;
+  color: yellow;
+}
+
 body {
 	font-family: 'Roboto', sans-serif; 
 }
 
+#managBoard
+{
+  height: 100%;
+  width: 100px;
+  background-color: aqua;
+}
 
     </style>
 
   </head>
     <body>
-      yes
+     
+      <div style="display: flex;">
+
+    
+      <!-- <div id = "managBoard">
+
+      </div>   -->
+      <div id = "AllMap" style="position: relative;">
             <div id='map2'></div>
             <p id = "titre">MY VILLAGE</p>
-        <div id='map'></div>
-
+            <div id='map'> </div> 
+      </div>   
+       </div>
+          
+      
 
 
         <script>
 
-          var largeurEcran = window.innerWidth;
-          var hauteurEcran = window.innerHeight+500;
+         
 
-          console.log(largeurEcran);
-          console.log(hauteurEcran);
+          var largeurEcran = window.innerWidth;
+          var hauteurEcran = window.innerHeight; 
+          
+          // var MB = document.getElementById("managBoard");
+          // MB.style.height= hauteurEcran+"px";
+
+        
+
+          var AllMap = document.getElementById("AllMap");
+          AllMap.style.width = largeurEcran+"px";
+          AllMap.style.height= hauteurEcran+"px";
+
 
 
           var maDiv = document.getElementById("map");
@@ -72,33 +109,47 @@ body {
           var maDiv2 = document.getElementById("map2");
           maDiv2.style.width = largeurEcran+"px";
           maDiv2.style.height= hauteurEcran+"px";
-          
+
+          var MyZoom = 6.60;
+          var MyLat = 14;
+          var MyLong = 10.656;
 
           mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
           var map = new mapboxgl.Map({
               container: 'map',
               style: 'mapbox://styles/jooshuua8/cllfga19t014c01p8cdx86ntv',
-              zoom: 5.5,
-              minZoom :5.5,
-              center :[12.673965,6.174874]
+              zoom: MyZoom,
+              center :[MyLat,MyLong]
           });
 
          
           var map2 = new mapboxgl.Map({
               container: 'map2',
               style: 'mapbox://styles/jooshuua8/cllffxl3p014b01p8gntqas6x',
-              zoom: 5.5,
-              minZoom :5.5,
-              center :[12.673965,6.174874]
+              zoom: MyZoom,
+              center :[MyLat,MyLong]
           });
+          
 
           
           map.on('click', function(e) {
-          var clickedLngLat = e.lngLat; 
-          var longitude = clickedLngLat.lng;
-          var latitude = clickedLngLat.lat;
 
-          console.log('Latitude : ' + latitude + ', Longitude : ' + longitude);
+          // var clickedLngLat = e.lngLat; 
+          // var longitude = clickedLngLat.lng;
+          // var latitude = clickedLngLat.lat;
+
+          // console.log('Latitude : ' + latitude + ', Longitude : ' + longitude);
+
+              const zoomLevel = map.getZoom();
+              console.log('Niveau de zoom :', zoomLevel);
+
+              const center = map.getCenter();
+              const latitude = center.lat;
+              const longitude = center.lng;
+
+              console.log("Latitude du centre :", latitude);
+              console.log("Longitude du centre :", longitude);
+
          
           });
 
@@ -111,13 +162,43 @@ body {
               .setLngLat([12,6]) 
               .addTo(map); 
 
+
+            
+          
+        const titreElement = document.getElementById("titre");
+        var opacityTitre = 1;
+        var opacityMap = 0.8;
+
+         
+         
+
+
           
           map.on('wheel', e => {
             
             e.preventDefault();
+           // MyLat = MyLat -= 0.1;
 
+           if(MyZoom > 5)
+           {
+              MyLong = MyLong  -= 0.1;  
+              MyZoom = MyZoom -=0.03;
+              opacityTitre -= 0.035;
+              titreElement.style.opacity = opacityTitre;
+
+              opacityMap -= 0.03;
+              maDiv.style.opacity = opacityMap;
+
+
+
+              map.setCenter([MyLat, MyLong]);
+              map2.setCenter([MyLat, MyLong]);
+
+              map.setZoom(MyZoom);
+              map2.setZoom(MyZoom);
+
+           }
           
-            window.scrollBy(0, -e.deltaY);
           });
 
           map2.on('wheel', e => {
@@ -127,6 +208,11 @@ body {
           
             window.scrollBy(0, -e.deltaY);
           });
+
+
+          window.addEventListener('scroll', () => {
+         
+        });
 
 
 
