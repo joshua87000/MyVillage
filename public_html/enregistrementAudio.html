@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enregistrement audio vers Firebase</title>
+</head>
+<body>
+    <h1>Enregistrement audio</h1>
+
+    <!-- Bouton pour commencer l'enregistrement -->
+    <button id="startRecord">Commencer l'enregistrement</button>
+
+    <!-- Bouton pour arrêter l'enregistrement -->
+    <button id="stopRecord" disabled>Arrêter l'enregistrement</button>
+
+    <!-- Audio pour la lecture de l'enregistrement -->
+    <audio id="audioPlayer" controls></audio>
+
+    <!-- Indicateur d'enregistrement -->
+    <div id="recordingIndicator" style="display: none; color: red;">Enregistrement en cours...</div>
+
+    <!-- Bouton pour envoyer l'enregistrement à Firebase -->
+    <button id="sendToFirebase" disabled>Envoyer à Firebase</button>
+
+    <!-- Ajoutez ici vos scripts Firebase -->
+    <script type="module">
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+        import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
+
+          const firebaseConfig = {
+          apiKey: "AIzaSyCjoNsmpZZdE-Qdx05AdDR_yksQteIdgzA",
+          authDomain: "myvillage-f841c.firebaseapp.com",
+          databaseURL: "https://myvillage-f841c-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "myvillage-f841c",
+          storageBucket: "myvillage-f841c.appspot.com",
+          messagingSenderId: "1064715931888",
+          appId: "1:1064715931888:web:ee0f7112d22a8e3596f235",
+          measurementId: "G-XZHB36B75E"
+        };
+
+        // Initialisez Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Éléments du DOM
+        const startButton = document.getElementById('startRecord');
+        const stopButton = document.getElementById('stopRecord');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const recordingIndicator = document.getElementById('recordingIndicator');
+        const sendToFirebaseButton = document.getElementById('sendToFirebase');
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        startButton.addEventListener('click', () => {
+            startButton.disabled = true;
+            stopButton.disabled = false;
+            audioChunks = [];
+            recordingIndicator.style.display = 'block';
+
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = event => {
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        recordingIndicator.style.display = 'none';
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioPlayer.src = audioUrl;
+                        sendToFirebaseButton.disabled = false;
+                    };
+
+                    mediaRecorder.start();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de l\'obtention de l\'accès au microphone:', error);
+                });
+        });
+
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+        });
+
+      
+        sendToFirebaseButton.addEventListener('click', () => {
+            const storage = getStorage(app);
+            const storageRef = ref(storage, 'enregistrements/enregistrement_audio.wav');
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        
+            const metadata = {
+                contentType: 'audio/wav'
+            };
+        
+            uploadBytes(storageRef, audioBlob, metadata).then(snapshot => {
+                console.log('Enregistrement audio téléchargé avec succès !');
+            }).catch(error => {
+                console.error('Erreur lors du téléchargement de l\'enregistrement audio :', error);
+            });
+        });
+// ...
+
+    </script>
+</body>
+</html>

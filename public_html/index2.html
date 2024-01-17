@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8">
+    <title>Cameroun MapBox</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="ScrolAnimation.css">
+
+
+    <style>
+
+
+        .custom-marker
+        {
+          width: 30px;
+          height: 30px;
+          background-color: red;
+        }
+        body
+        {
+          
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          height: 100vh;
+          /* width: 100vh; */
+        }
+
+        #map
+        {
+          position: absolute;
+          top: 0%;
+          left: 0%;
+          opacity: 0.8;
+          width: 100%;
+          height: 100%;
+        }
+
+        #map2
+        {
+          position: absolute;
+          top: 0%;
+          left: 0%;
+          width: 100%;
+          height: 100%;
+        }
+
+        #AllMap
+        {
+          width: 100%;
+          height: 100%;
+        }
+
+        @font-face {
+  font-family: 'Hakuna';
+  src: url('font/Hakuna Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Futura';
+  src: url('font/Futura Bold.otf') format('opentype');
+}
+
+#titre {
+  margin:0%;
+  font-size: 1000%;
+  font-family: 'Hakuna', sans-serif;
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%); 
+  text-align: center;
+  color: yellow;
+}
+
+body {
+
+}
+
+#managBoard
+{
+  height: 100%;
+  width: 100px;
+  background-color: aqua;
+}
+
+#ConnectButton
+{
+  position:absolute;
+  top: 5%;
+  left:90%;
+  transform: translateX(-50%); 
+  background-color:white;
+  font-family: 'Futura', sans-serif;
+  border:none;
+  border-radius:15px;
+  font-size:25px;
+}
+
+#PlacerVillage
+{
+  position:absolute;
+  top: 90%;
+  left:50%;
+  transform: translateX(-50%); 
+  background-color:white;
+  font-family: 'Futura', sans-serif;
+  border:none;
+  border-radius:15px;
+  font-size:25px;
+  padding:10px;
+  display:none;
+}
+
+.hutImg
+{
+    width : 50px;
+}
+
+.hut
+{
+  
+    align-items:center;
+    display:flex;
+    flex-direction:column;
+     cursor: pointer; 
+}
+.BoxName
+{
+    border:solid;
+    border-radius: 32px;
+    border: 4px solid #67C537;
+    text-align: center;
+    font-family: Hakuna;
+    font-size: 20px;
+    background: rgba(217, 217, 217, 0.74);
+    padding-left:5px;
+      padding-right:5px;
+
+}
+
+ #livePoint
+  {
+    background-color: red;
+    width: 15px;
+    height: 15px;
+    margin-right :20px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); /* Ajouter l'ombre 360° autour du cercle */
+    animation: blink 3s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% {
+      box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.4); /* Opacité de l'ombre à 0.1 aux instants 0% et 100% */
+    }
+    50% {
+      box-shadow: 0 0 10px 5px rgba(255, 0, 0, 1); /* Opacité de l'ombre à 1 à l'instant 50% */
+    }
+  }
+
+
+
+    </style>
+
+  </head>
+    <body>
+     
+      <div style="display: flex; height: 100%; width: 100%;">
+          
+        
+    
+    
+      <!-- <div id = "managBoard">
+
+      </div>   -->
+      <div id = "AllMap" style="position: relative;">
+      
+            <div id='map2'></div>
+            <p id = "titre">MY VILLAGE</p>
+            <div id='map'> </div>
+            <div id = "scroll" class="arrows"></div>
+      </div>   
+      <button id = "ConnectButton">Se Connecter</button>
+      <button id = "PlacerVillage">Placer mon village</button>
+      
+
+       </div>
+          
+      
+
+
+        <script>
+
+         
+
+          var largeurEcran = window.innerWidth;
+          var hauteurEcran = window.innerHeight; 
+          
+           var MB = document.getElementById("managBoard");
+          // MB.style.height= hauteurEcran+"px";
+
+        
+
+           var AllMap = document.getElementById("AllMap");
+           var maDiv = document.getElementById("map");
+           var maDiv2 = document.getElementById("map2");
+          
+          var MyZoom = 6.60;
+          var MyLat = 14;
+          var MyLong = 10.656;
+
+          mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/jooshuua8/cllfga19t014c01p8cdx86ntv',
+              zoom: MyZoom,
+              center :[MyLat,MyLong],
+              interactive: false 
+          });
+
+         
+          var map2 = new mapboxgl.Map({
+              container: 'map2',
+              style: 'mapbox://styles/jooshuua8/cllffxl3p014b01p8gntqas6x',
+              zoom: MyZoom,
+              center :[MyLat,MyLong],
+              doubleClickZoom: false 
+          });
+          
+
+          
+          map.on('click', function(e) {
+
+          // var clickedLngLat = e.lngLat; 
+          // var longitude = clickedLngLat.lng;
+          // var latitude = clickedLngLat.lat;
+
+          // console.log('Latitude : ' + latitude + ', Longitude : ' + longitude);
+
+              const zoomLevel = map.getZoom();
+              console.log('Niveau de zoom :', zoomLevel);
+
+              const center = map.getCenter();
+              const latitude = center.lat;
+              const longitude = center.lng;
+
+              console.log("Latitude du centre :", latitude);
+              console.log("Longitude du centre :", longitude);
+
+         
+          });
+        
+
+         
+       function placerVillage(name, posX, posY)
+       {
+            let customElement = document.createElement('div');
+            customElement.innerHTML = `  <div id = "livePoint"></div>`;
+                
+            var marker = new mapboxgl.Marker(customElement)
+                .setLngLat([posX,posY])
+                .addTo(map2);
+                
+       }
+      placerVillage("Cribi",9.74,4);
+
+
+            
+          
+        const titreElement = document.getElementById("titre");
+        var opacityTitre = 1;
+        var opacityMap = 0.8;
+        var landingpage = true;
+
+         
+         
+
+
+          
+          map.on('wheel', e => {
+            
+            e.preventDefault();
+         
+           // MyLat = MyLat -= 0.1;
+           if (e.originalEvent.deltaY > 0) {
+              if(MyZoom > 5.4)
+              {
+                  MyLong = MyLong  -= 0.08;  
+                  MyZoom = MyZoom -=0.03;
+                  opacityTitre -= 0.035;
+                  titreElement.style.opacity = opacityTitre;
+
+                  opacityMap -= 0.03;
+                  maDiv.style.opacity = opacityMap;
+
+
+
+                  map.setCenter([MyLat, MyLong]);
+                  map2.setCenter([MyLat, MyLong]);
+
+                  map.setZoom(MyZoom);
+                  map2.setZoom(MyZoom);
+
+                 
+                  
+
+              }
+              else
+              {
+               
+                var divASupprimer = document.getElementById("map");
+                divASupprimer.remove();
+                var divASupprimer2 = document.getElementById("titre");
+                divASupprimer2.remove();
+                landingpage = false;
+                map2.setMinZoom(5.4);
+                
+                var divASupprimer = document.getElementById("scroll");
+                  if (divASupprimer) {
+                    divASupprimer.remove(); 
+                  } 
+                  
+                const PlacerBouton = document.getElementById("PlacerVillage");
+                // PlacerBouton.textContent = error.message;
+                PlacerBouton.style.display = "block";
+   
+
+              }
+            }
+            else
+            {
+              if(MyZoom < 6.669)
+              {
+                  MyLong = MyLong  += 0.1;  
+                  MyZoom = MyZoom +=0.03;
+                  opacityTitre += 0.035;
+                  titreElement.style.opacity = opacityTitre;
+
+                  opacityMap += 0.03;
+                  maDiv.style.opacity = opacityMap;
+
+
+
+                  map.setCenter([MyLat, MyLong]);
+                  map2.setCenter([MyLat, MyLong]);
+
+                  map.setZoom(MyZoom);
+                  map2.setZoom(MyZoom);
+
+                 
+              
+
+
+
+              }
+            }
+
+          
+          });
+
+          map2.on('wheel', e => {
+            
+            if(landingpage == true)
+            {
+                 e.preventDefault();
+                 console.log("teste");
+            }
+            else
+            {
+                console.log("ici");
+            }
+          
+          });
+
+
+       
+        const connectButton = document.getElementById("ConnectButton");
+        connectButton.addEventListener("click", () => {
+          
+          window.location.href = "loginPage.html"; 
+        });
+        
+       
+        
+        // Vérifier si l'e-mail de l'utilisateur est stocké dans le localStorage
+var storedUserEmail = localStorage.getItem("userEmailMyVillage");
+
+if (storedUserEmail) {
+
+getUsernameFromEmail(storedUserEmail)
+  .then(username => {
+    if (username) {
+      console.log("Username correspondant à l'email :", username);
+        connectButton.textContent = "Bienvenue "+username;
+    } else {
+      console.log("Aucun utilisateur trouvé avec cet email");
+    }
+  });
+
+  console.log("L'utilisateur est connecté avec l'e-mail :", storedUserEmail);
+  const connectButton = document.getElementById("ConnectButton");
+
+
+
+
+
+} else {
+  // L'utilisateur n'est pas connecté, car l'e-mail n'est pas dans le localStorage
+  console.log("L'utilisateur n'est pas connecté.");
+}
+
+
+function getUsernameFromEmail(email) {
+  const formData = new FormData();
+  formData.append("email", email);
+
+  return fetch("getUsername.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then(response => response.text())
+    .catch(error => {
+      console.error("Une erreur s'est produite : ", error);
+    });
+}
+
+var mode = 0;
+
+
+ const PlacerVillageButton = document.getElementById("PlacerVillage");
+ 
+        PlacerVillageButton.addEventListener("click", () => {
+            
+            mode = 1;
+            PlacerVillageButton.innerHTML = "Choisissez la position de votre village<br>Faites un double click pour valider";
+            
+        });
+
+ map2.on('dblclick', event => {
+     
+     if(mode == 1)
+     {
+           const latitude = event.lngLat.lat;
+           const longitude = event.lngLat.lng;
+           console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        //   const currentZoom = map2.getZoom();
+
+        //   if (currentZoom < 11) {
+        //     map2.flyTo({
+        //       zoom: 11,
+        //       duration: 2000,
+        //       center: event.lngLat
+        //     });
+          const targetZoom = 11;
+          const currentZoom = map2.getZoom();
+          const intervalDuration = 16; // 16 ms corresponds to 60 frames per second
+        
+          if (currentZoom < targetZoom) {
+            let zoom = currentZoom;
+            const zoomInterval = setInterval(() => {
+                
+              if (zoom >= targetZoom) {
+                clearInterval(zoomInterval);
+                afficheQuestion(latitude,longitude)
+              } else {
+                zoom += 0.1; // Adjust this value for smoother/faster animation
+                map2.easeTo({ zoom, center: event.lngLat });
+              }
+            }, intervalDuration);
+          }
+     }
+});
+
+function afficheQuestion(y,x)
+{
+     let customElement = document.createElement('div');
+            customElement.innerHTML = `  <div id = "choix">
+                                              <img class = "hutImg" src="img/hut.png" alt="image hut">
+                                              <div id = "question">
+                                                 <p style ="padding:5px;">Voulez vous placer<br>votre village ici ?</p>
+                                                 <div id = "reponse">
+                                                     <div id = "oui">Oui</div>
+                                                     <div id = "non">Annuler</div>
+                                                 </div>
+                                              </div>
+                                          </div>`;
+                
+            var marker2 = new mapboxgl.Marker(customElement)
+                .setLngLat([x,y])
+                .addTo(map2);
+}
+
+ function enregistrerVillage(name,lat,long,user) {
+          // Créer un objet XMLHttpRequest
+          var xhr = new XMLHttpRequest();
+          
+          // Définir la fonction de rappel pour gérer la réponse
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+              if (xhr.status === 200) {
+                // La requête s'est terminée avec succès, vous pouvez afficher la réponse
+                console.log(xhr.responseText);
+              } else {
+                // Il y a eu une erreur lors de la requête
+                console.error("Erreur lors de la requête : " + xhr.status);
+              }
+            }
+          };
+          
+          // Préparer la requête POST
+          xhr.open("POST", "addVillage.php", true);
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          
+          // Créer les données à envoyer dans la requête
+          var data = "nom=" + encodeURIComponent(name) + "&lat=" + encodeURIComponent(lat)+ "&long=" + encodeURIComponent(long)+ "&user=" + encodeURIComponent(user);
+          
+          // Envoyer la requête avec les données
+          xhr.send(data);
+        }
+        
+     
+// var parametreUnique = {
+//   nom: 'John' // Exemple avec un paramètre "nom"
+// };
+
+// // Convertir l'objet en une chaîne de requête
+// var queryString = Object.keys(parametreUnique).map(function(key) {
+//   return key + '=' + encodeURIComponent(parametreUnique[key]);
+// }).join('&');
+
+// // Ajouter le paramètre à l'URL actuelle
+// var urlActuelle = window.location.href;
+// var nouvelleURL = "monVillage.html" + '?' + queryString;
+
+// // Rediriger vers la nouvelle URL
+// window.location.href = nouvelleURL;
+
+        
+        
+        
+        </script>
+        
+        <style>
+            #choix
+            {
+              
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+            }
+            #question
+            {
+                border-radius: 8px;
+                border: 2px solid #67C537;
+                background: rgba(217, 217, 217, 0.71);
+                text-align: center;
+                font-family: Futura;
+                font-size: 17px;
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+            }
+            #reponse
+            {
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                 width:100%;
+            }
+            #oui
+            {
+                border-radius: 3px;
+                border: 0px solid #000;
+                background: #00B91E;
+                color:white;
+                width:40%;
+                padding:5px;
+                margin:5px;
+            }
+            #non
+            {
+                border-radius: 3px;
+                border: 0px solid #000;
+                background: red;
+                color:white;
+                  width:40%;
+                padding:5px;
+                margin:5px;
+            }
+            
+            
+        </style>
+
+    </body>
+</html>
+
+
+
+
+

@@ -1,0 +1,405 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mon Compte</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+
+
+
+</head>
+<body>
+<style>
+
+body
+{
+     margin: 0;
+          padding: 0;
+          
+          height: 100vh;
+}
+header
+{
+     position: absolute; top: 0; bottom: 0; width: 100%;
+     height: 60px;
+     background-color: rgba(255, 255, 255, 0.8);
+    
+}
+
+#ulNav
+{
+    display:flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+
+}
+
+.link
+{
+    margin:10px;
+     list-style: none;
+
+} 
+   .link a {
+    text-decoration: none; /* Supprimer le soulignement */
+    color: inherit; /* Utiliser la couleur héritée du parent (peut être définie sur "inherit" ou sur la couleur de votre choix) */
+     font-family: 'Futura', sans-serif;
+}
+
+      @font-face {
+          font-family: 'Hakuna';
+          src: url('font/Hakuna Regular.ttf') format('truetype');
+        }
+        
+        @font-face {
+          font-family: 'Futura';
+          src: url('font/Futura Bold.otf') format('opentype');
+        }
+
+#Conec
+{
+     margin-left: auto;
+}
+
+#map {
+ position: absolute; top: 0; bottom: 0; width: 100%; height: 100%;
+}
+
+#mainContent
+{
+   
+     display:flex;
+    flex-direction : column;
+            position :absolute;
+            left:50%;
+            top:15%;
+            transform: translateX(-50%); 
+            width:60%;
+            height:60%;
+            background-color: rgba(255,255,255,0.63);
+           
+            border-radius : 15px;
+            align-items:center;
+            justify-content:center;
+             font-family: 'Futura', sans-serif; 
+}
+
+#secondContent
+{
+ 
+     display:flex;
+     position :absolute;
+            left:50%;
+            top:78%;
+            transform: translateX(-50%); 
+            width:60%;
+            height:15%;
+            align-items:center;
+            justify-content:center;
+             font-family: 'Futura', sans-serif; 
+             justify-content: space-between
+}
+
+.note
+{
+     background-color: rgba(255,255,255,0.63);
+     width:45%;
+     height:100%;
+     border-radius:15px;
+      text-align: center;
+      display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size:30px;
+     
+}
+
+#listeTraduction
+{
+  
+    height:80%;
+    width:100%;
+     display:flex;
+            flex-wrap: wrap;
+            gap:4.5%;
+            overflow: auto;
+            justify-content:center;
+}
+ 
+  ::-webkit-scrollbar {
+          width: 5px;
+        }
+        
+        /* Style de la barre de défilement */
+        ::-webkit-scrollbar-thumb {
+          background-color: #888;
+        }
+        
+        /* Style de la piste de la barre de défilement */
+        ::-webkit-scrollbar-track {
+          background-color: #f1f1f1;
+        }
+        
+        .Traduction
+        {
+            background-color:white;
+            border-radius:25px;
+            font-family: 'Futura', sans-serif;
+            width: 43%;
+            height : 70px;
+            padding:20px;
+            position:relative;
+            margin-top:20px;
+           
+        }
+        
+        #Fr
+        {
+            font-size: 24px;
+            margin:5px;
+        }
+        
+        #Tr
+        {
+           color: #00B91E;
+           font-size: 16px;
+            margin:5px;
+        }
+        
+        #Auteur
+        {
+            position :absolute;
+            left:50%;
+            top:79%;
+            transform: translateX(-50%); 
+             font-size: 12px;
+             margin:0px;
+             height:20px;
+             text-align:center;
+        }
+        #Icone
+        {
+            position :absolute;
+            left:90%;
+            top:75%;
+            transform: translateX(-50%); 
+            display:flex;
+            opacity:0.5;
+              margin:0px;
+        }
+        
+        #deco
+        {
+            position : absolute;
+            top :10%;
+            right:1%;
+            border:none;
+            border-radius:15px;
+            padding:5px 10px 5px 10px;
+            background-color:red;
+            font-family: 'Futura', sans-serif;
+            color:white;
+        }
+  
+</style>
+
+<div id="map"></div>
+   <header>
+        <nav>
+            <ul id = "ulNav">
+                <li class = "link"><a href="index.html">Accueil</a></li>
+                <li class = "link"><a href="index.html#p2">Voir la carte </a></li>
+                <li  class = "link"><a href="#">Contact</a></li>
+                <li class = "link" id ="Conec"><a href="loginPage.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div id = "mainContent">
+        <h1>Mes traductions</h1>
+        <div id = "listeTraduction"></div>
+    </div>
+    
+    <div id ="secondContent">
+        <p class ="note">0 points</p>
+        <p class ="note">0 traductions</p>
+    </div>
+    
+    <button id = "deco">Se déconnecter</button>
+
+
+<script>
+ var storedUserEmail = localStorage.getItem("userEmailMyVillage");
+ console.log(storedUserEmail);
+ 
+  var maDiv = document.getElementById("map");
+
+          var MyZoom = 11.52;
+          var MyLat = 11.627;
+          var MyLong = 3.893;
+
+          mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/jooshuua8/cllhv6isr015q01pi0xq9e2ck',
+              zoom: MyZoom,
+              center :[MyLat,MyLong]
+          });
+          
+          
+var user;
+        
+        function getUser(Email) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getUser.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         user = JSON.parse(xhr.responseText);
+                        if (user.length > 0) {
+
+                         console.log(user);
+                         getTranslations(user[0].Id);
+                         
+                          const liElement = document.getElementById('Conec');
+                            const aElement = liElement.querySelector('a');
+                            aElement.textContent = user[0].Username;
+                            aElement.href = 'monCompte.html';
+                            // Sélectionnez les éléments avec la classe "note"
+                            let elements = document.querySelectorAll(".note");
+                            elements[0].textContent = user[0].Score + "points";
+                           
+
+                        
+                        } else {
+                            console.log("Aucune traduction trouvée pour cette langue.");
+                        }
+                    }
+                };
+                xhr.send("langue=" + Email);
+            }
+            getUser(storedUserEmail);
+            
+                   var traduction;
+        
+            function getTranslations(id) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getUserTraduction.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         traduction = JSON.parse(xhr.responseText);
+                        if (traduction.length > 0) {
+
+                         afficheTraduction();
+                         console.log(traduction);
+                         let elements = document.querySelectorAll(".note");
+                         elements[1].textContent = traduction.length + "traductions";
+                          
+                        } else {
+                            console.log("Aucune traduction trouvée pour cette langue.");
+                        }
+                    }
+                };
+                xhr.send("User=" + id);
+            }
+            
+              function afficheTraduction()
+         {
+            var listeTraduction = document.getElementById("listeTraduction");
+             if(traduction.length ==0)
+             {
+                  var divAnyTraduction = document.createElement("div");
+                  divAnyTraduction.className = "anyTraduction";
+                   divAnyTraduction.innerHTML = `
+                            <p>Vous n'avez pas encore proposé de traduction </p>
+                            <button>Ajouter une traduction</button>
+                        `;
+                        
+                    listeTraduction.appendChild(divAnyTraduction);
+                  
+             }
+             for (let i = 0; i < traduction.length; i++) {
+                  let auteur;
+                  
+                 getUsernameFromId( traduction[i].UserId)
+                  .then(username => {
+                    if (username) {
+                       auteur = username;
+                       var divTraduction = document.createElement("div");
+                        divTraduction.className = "Traduction";
+                    
+                        divTraduction.innerHTML = `
+                            <p id="Fr">${traduction[i].Fr}</p>
+                            <p id="Tr">${traduction[i].Tr}</p>
+                            <p id="Auteur">Traduit par ${auteur}</p>
+                        `;
+                    
+                        if ( traduction[i].Audio === 1) {
+                            divTraduction.innerHTML += `
+                                <div id="Icone">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/Speaker.svg" alt="Icone speaker">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/Heart.svg" alt="Icone like">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/cross.svg" alt="Icone croix">
+                                </div>
+                            `;
+                        }
+                        else
+                        {
+                            divTraduction.innerHTML += `
+                                <div id="Icone">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/Heart.svg" alt="Icone like">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/cross.svg" alt="Icone croix">
+                                </div>
+                            `;
+                        }
+                    
+                        listeTraduction.appendChild(divTraduction);
+                              
+                            } else {
+                              console.log("Aucun utilisateur trouvé avec cet id");
+                            }
+                          });
+                                 
+                 
+             
+                
+            }
+         }
+         
+            function getUsernameFromId(Id) {
+            console.log("myId:",Id);
+          const formData = new FormData();
+          formData.append("UserId", Id);
+        
+          return fetch("getUsername.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then(response => response.text())
+            .catch(error => {
+              console.error("Une erreur s'est produite : ", error);
+            });
+        }
+        
+        document.getElementById('deco').addEventListener('click', function () {
+    // Supprimer la variable localStorage
+    localStorage.removeItem('userEmailMyVillage');
+    
+    // Rediriger vers la page index.html
+    window.location.href = 'index.html';
+});
+
+ 
+</script>
+
+</body>
+</html>

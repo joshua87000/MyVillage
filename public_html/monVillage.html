@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8">
+    <title>Cameroun MapBox</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+     <link rel="stylesheet" href="style.css">
+  
+
+    <style>
+    
+    
+
+                @font-face {
+          font-family: 'Hakuna';
+          src: url('font/Hakuna Regular.ttf') format('truetype');
+        }
+        
+        @font-face {
+          font-family: 'Futura';
+          src: url('font/Futura Bold.otf') format('opentype');
+        }
+        
+        body
+        {
+          
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          height: 100vh;
+          /* width: 100vh; */
+         
+        }
+
+        #map
+        {
+          position: absolute;
+          top: 0%;
+          left: 0%;
+          opacity: 0.8;
+          width: 100%;
+          height: 100%;
+        }
+        
+        #d1
+        {
+            /*border:solid;*/
+            position:absolute;
+            top:7%;
+            left:0%;
+            height:88%;
+            width:70%;
+            margin:2%;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        
+        #d2
+        {
+               position:absolute;
+            top:7%;
+            left:64%;
+            height:88%;
+            width:30%;
+            margin:2%;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        
+        #Titre h1 {
+           font-family: 'Hakuna', sans-serif;
+           font-size:500%;
+           margin:20px;
+        }
+        
+        #Titre
+        {
+            background-color:white;
+            width:80%;
+            border-radius:30px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+          
+        }
+        
+        #Stat
+        {
+            display:flex;
+            font-family: 'Futura', sans-serif;
+        }
+        
+        #Stat p
+        {
+            margin:20px;
+            text-align:center;
+            opacity:0.5;
+        }
+        
+        #search-input
+        {
+            border-radius: 50px;
+            border:none;
+            width:50%;
+            background-image: url("img/loupe.png");
+            background-repeat: no-repeat;
+            background-position: left center;
+            height:40px;
+            font-size:25px;
+            padding-left:50px;
+            font-family: 'Futura', sans-serif;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+           
+        }
+        
+        #SearchBox
+        {
+             width:80%;
+             margin-top:20px;
+             display:flex;
+                font-family: 'Futura', sans-serif;
+                 align-items: center;
+    justify-content: space-between;
+            
+        }
+        
+        #ListeTraduction
+        {
+            width:80%;
+            margin-top:30px;
+            display:flex;
+            flex-wrap: wrap;
+               gap:4.5%;
+           overflow: auto;
+            justify-content:flex-start;
+}
+ 
+  ::-webkit-scrollbar {
+          width: 5px;
+        }
+        
+        /* Style de la barre de défilement */
+        ::-webkit-scrollbar-thumb {
+          background-color: #888;
+        }
+        
+        /* Style de la piste de la barre de défilement */
+        ::-webkit-scrollbar-track {
+          background-color: #f1f1f1;
+        }
+        
+        
+        .Traduction
+        {
+            background-color:white;
+            border-radius:25px;
+            font-family: 'Futura', sans-serif;
+            width: 40%;
+            padding:20px;
+            position:relative;
+            margin-top:20px;
+            min-width:290px;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+           
+        }
+        
+        #Fr
+        {
+            font-size: 24px;
+            margin:5px;
+        }
+        
+        #Tr
+        {
+           color: #00B91E;
+           font-size: 16px;
+            margin:5px;
+        }
+        
+        #Auteur
+        {
+            position :absolute;
+            left:50%;
+            top:79%;
+            transform: translateX(-50%); 
+             font-size: 12px;
+             margin:0px;
+             height:20px;
+             text-align:center;
+        }
+        #Icone
+        {
+            position :absolute;
+            right:0%;
+            bottom:2px;
+            transform: translateX(-15%); 
+            display:flex;
+            opacity:0.5;
+              margin:0px;
+        }
+        
+        #Icone img
+        {
+            cursor: pointer;
+        }
+        
+        #carte
+        {
+              background-color:white;
+              border-radius:30px;
+              height:32%;
+              width:90%;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        }
+        
+        #classement
+        {
+             background-color:white;
+              border-radius:30px;
+              height:40%;
+              width:90%;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              margin-top:20px;
+               font-family: 'Futura', sans-serif;
+               flex-direction:column;
+               box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        }
+        
+        .user
+        {
+            display:flex;
+           
+    align-items: center;
+    width:90%;
+        }
+        
+        .user img
+        {
+            width:25px;
+            height:auto;
+            margin-right:20px;
+            
+        }
+        
+        #map2
+        {
+            width:94%;
+            height:90%;
+         border-radius:20px;
+        }
+        
+         #livePoint
+          {
+            background-color: red;
+            width: 15px;
+            height: 15px;
+            margin-right :20px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); /* Ajouter l'ombre 360° autour du cercle */
+            animation: blink 3s infinite;
+          }
+        
+          @keyframes blink {
+            0%, 100% {
+              box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.4); /* Opacité de l'ombre à 0.1 aux instants 0% et 100% */
+            }
+            50% {
+              box-shadow: 0 0 10px 5px rgba(255, 0, 0, 1); /* Opacité de l'ombre à 1 à l'instant 50% */
+            }
+          }
+          
+          
+         .notr
+         {
+             display:flex;
+             flex-direction:column;
+             justify-content:center;
+             align-items:center;
+         }
+         
+         .notr p
+         {
+             font-size:30px;
+             color:white;
+              font-family: 'Futura', sans-serif;
+         }
+         
+         .notr button
+         {
+              font-size:28px;
+             color:white;
+            border-radius: 17px;
+            background: #00B91E;
+              font-family: 'Futura', sans-serif;
+              border:none;
+              padding:10px 30px 10px 30px;
+         }
+         
+         #addTr
+         {
+              font-size:28px;
+             color:white;
+            border-radius: 30px;
+            background: #00B91E;
+              font-family: 'Futura', sans-serif;
+              border:none;
+              padding:10px 30px 10px 30px;
+               height:18%;
+              width:90%;
+              margin-top :20px;
+              box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+         }
+         
+              #addTr:hover {
+    background-color: #339542;
+}
+         
+ header
+{
+     position: absolute; top: 0; bottom: 0; width: 100%;
+     height: 60px;
+     background-color: rgba(255, 255, 255, 0.8);
+    
+}
+
+#ulNav
+{
+    display:flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+
+}
+
+.link
+{
+    margin:10px;
+     list-style: none;
+
+} 
+   .link a {
+    text-decoration: none; /* Supprimer le soulignement */
+    color: inherit; /* Utiliser la couleur héritée du parent (peut être définie sur "inherit" ou sur la couleur de votre choix) */
+     font-family: 'Futura', sans-serif;
+}
+
+#Conec
+{
+     margin-left: auto;
+}
+
+.Document
+{
+            background-color:white;
+            border-radius:25px;
+            font-family: 'Futura', sans-serif;
+          
+            padding:20px;
+            position:relative;
+            margin:20px 10px 10px 10px;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.Document h1
+{
+    margin-top:0px;
+    color: #00B91E;
+}
+
+.goToDoc
+{
+    
+             border-radius: 17px;
+              font-size: 20px;
+            background: #00B91E;
+            color:white;
+             font-family: 'Futura', sans-serif;
+             border:none;
+              padding: 10px 40px 10px 40px;
+              margin-bottom:10px;
+}
+
+.goToDoc:hover {
+    background-color: #339542;
+    cursor:pointer;
+}
+
+
+    </style>
+
+  </head>
+    <body>
+     
+     <div id='map'> </div>
+       <header>
+        <nav>
+            <ul id = "ulNav">
+                <li class = "link"><a href="index.html">Accueil</a></li>
+                <li class = "link"><a href="index.html#p2">Voir la carte </a></li>
+                <li  class = "link"><a href="#">Contact</a></li>
+                <li class = "link" id ="Conec"><a href="loginPage.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+     <div id ="d1">
+         
+         <div id = "Titre">
+             <h1 id = "nameVillage"></h1>
+            <div id="Stat">
+                <p id="totalTraductions">0<br>Traductions</p>
+                <p id="utilisateursDistincts">0<br>Contributeurs</p>
+                <p id="traductionsAudio">0<br>Audio</p>
+            </div>
+
+         </div>
+         <div id = "SearchBox">
+             <input type="text" id="search-input" placeholder="Rechercher un mots" />
+             
+             <div class="toggleContainer">             
+                <label class="toggleSwitch nolabel" onclick="">
+                   <input type="checkbox" id="maCheckbox" />
+                    <a></a>
+                    <span>
+                        <span class="left-span">Langue</span>
+                        <span class="right-span">Culture</span>
+                    </span>											
+                </label>
+            </div> 
+             
+             
+         </div>
+         <div id = ListeTraduction>
+            
+         </div>
+     </div>
+     <div id= "d2">
+         <div id ="carte">
+               <div id='map2'> </div>
+         </div>
+         <div id ="classement">
+             <h2>Meilleurs traducteurs</h2>
+         </div>
+         <button id = "addTr" onclick="NouvelleTr()" >Ajouter une traduction</button>
+         
+     </div>
+     
+     
+        
+
+
+  <script type="module">
+  
+   import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+        import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCjoNsmpZZdE-Qdx05AdDR_yksQteIdgzA",
+          authDomain: "myvillage-f841c.firebaseapp.com",
+          databaseURL: "https://myvillage-f841c-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "myvillage-f841c",
+          storageBucket: "myvillage-f841c.appspot.com",
+          messagingSenderId: "1064715931888",
+          appId: "1:1064715931888:web:ee0f7112d22a8e3596f235",
+          measurementId: "G-XZHB36B75E"
+        };
+
+        // Initialisez Firebase
+        const app = initializeApp(firebaseConfig);
+
+   var maDiv = document.getElementById("map");
+     // Obtenez la chaîne de requête de l'URL
+        var queryString = window.location.search;
+        
+        // Créez un objet URLSearchParams à partir de la chaîne de requête
+        var params = new URLSearchParams(queryString);
+        
+        // Récupérez les valeurs des paramètres de requête
+        var nom = params.get('nom');
+        console.log(nom);
+        var pFr = document.getElementById('nameVillage');
+
+
+        pFr.textContent = nom;
+        
+        // Récupérer le paramètre "q" de l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const qParam = urlParams.get('q');
+        
+        // Sélectionner l'élément input par son ID
+        const inputElement = document.getElementById('search-input');
+        
+        // Mettre la valeur du paramètre "q" dans l'élément input
+        if (qParam !== null) {
+            inputElement.value = qParam;
+        }
+        
+        var storedUserEmail = localStorage.getItem("userEmailMyVillage");
+
+        if (storedUserEmail) {
+        
+            console.log("connecté",storedUserEmail);
+            const liElement = document.getElementById('Conec');
+            const aElement = liElement.querySelector('a');
+            aElement.textContent = 'Mon Compte';
+            aElement.href = 'monCompte.html';
+    
+        } else {
+         
+          console.log("L'utilisateur n'est pas connecté.");
+        }
+        
+
+
+        
+          var Village;
+        
+            function getVillage(langue) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getVillage.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         Village = JSON.parse(xhr.responseText);
+                        if (Village.length > 0) {
+
+                        console.log(Village[0]);
+                        placerVillage(Village[0].Nom,parseFloat(Village[0].Longitude),parseFloat(Village[0].Lat));
+                          
+                        } else {
+                            console.log("Aucune village trouvée pour cette langue.");
+                        }
+                    }
+                };
+                xhr.send("langue=" + langue);
+            }
+            
+         
+                 getVillage(nom);
+                 
+           
+            
+            var classement;
+            
+            function getClassement(langue) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getClassement.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         classement = JSON.parse(xhr.responseText);
+                        if (classement.length > 0) {
+                             console.log(classement);
+                             afficheClassement();
+                       
+                          
+                        } else {
+                            classement = [];
+                             afficheClassement();
+                        }
+                    }
+                };
+                xhr.send("langue=" + langue);
+            }
+            
+            getClassement(nom);
+            
+            
+            function afficheClassement()
+            {
+                 var cBox = document.getElementById('classement');
+                const tabSrc = ["img/or.jpg","img/argent.jpg","img/bronze.jpg"];
+                if(classement.length > 0)
+                {
+                    for(let i = 0 ; i < classement.length ;i++)
+                    {
+                        var divuser = document.createElement("div");
+                        divuser.className = "user";
+                    
+                        divuser.innerHTML = `
+                            <img src=${tabSrc[i]} alt="medaille">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-grow: 1;">
+                                <p id="name">${classement[i].Username}</p>
+                                <p id="score" style="margin: 0; text-align: right;">${classement[i].Score} points</p>
+                            </div>
+                        `;
+                    
+                        cBox.appendChild(divuser);
+                    }
+                }
+                else
+                {
+                    
+                     const classementDiv = document.getElementById('classement');
+                    const newElement = document.createElement('p');
+                    newElement.textContent = `Il n'y a encore aucun traducteur pour cette langue\nSoyez le premier !`; // Utilisation d'un saut de ligne (\n)
+                    newElement.style.textAlign = 'center'; // Centrer le texte
+                    newElement.style.whiteSpace = 'pre-line'; // Gérer les retours à la ligne
+                    classementDiv.appendChild(newElement);
+
+                }
+            }
+        
+        
+         
+            var maDiv2 = document.getElementById("map2");
+
+          var MyZoom = 11.52;
+          var MyLat = 11.627;
+          var MyLong = 3.893;
+
+          mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/jooshuua8/cllhv6isr015q01pi0xq9e2ck',
+              zoom: MyZoom,
+              center :[MyLat,MyLong]
+          });
+          
+           var map2 = new mapboxgl.Map({
+              container: 'map2',
+              style: 'mapbox://styles/jooshuua8/cllhv6isr015q01pi0xq9e2ck',
+              zoom: 3.36,
+              center :[13.06,7.76]
+          });
+          
+                  function resizeMap()
+{
+     const hauteurDeLaPage = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight,
+      document.body.clientHeight,
+      document.documentElement.clientHeight
+    );
+    
+    console.log("Hauteur totale de la page (y compris le scroll) : " + hauteurDeLaPage + " pixels");
+    maDiv.style.height = hauteurDeLaPage+"px";
+       map.resize();
+}
+
+   resizeMap();
+          
+window.addEventListener('resize', function () {
+   
+   
+    resizeMap();
+    console.log("resize");
+   
+
+});
+
+          
+          
+            var traduction;
+        
+            function getTranslations(langue) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getAllTraduction.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         traduction = JSON.parse(xhr.responseText);
+                        if (traduction.length > 0) {
+
+                         afficheTraduction();
+                          
+                        } else {
+                            console.log("Aucune traduction trouvée pour cette langue.");
+                              afficheTraduction();
+                        }
+                    }
+                };
+                xhr.send("langue=" + langue);
+            }
+            
+            
+            var langue = nom; 
+            
+             if(qParam == null)
+            {
+                getTranslations(langue);
+            }
+            else
+            {
+                rechercherTraductions(qParam,nom); 
+            }
+           
+            
+        function getUsernameFromId(Id) {
+            console.log("myId:",Id);
+          const formData = new FormData();
+          formData.append("UserId", Id);
+        
+          return fetch("getUsername.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then(response => response.text())
+            .catch(error => {
+              console.error("Une erreur s'est produite : ", error);
+            });
+        }
+            
+         function afficheTraduction()
+         {
+            var listeTraduction = document.getElementById("ListeTraduction");
+             console.log(traduction);
+             
+             if(traduction.length == 0)
+             {
+                  listeTraduction.style.justifyContent = "center";
+                  var divuser = document.createElement("div");
+                        divuser.className = "notr";
+                    
+                        divuser.innerHTML = `
+                            <p>Aucune traduction trouvée</p>
+                            <button onclick="NouvelleTr()">Ajouter une traduction</button>
+                        `;
+                    
+                        listeTraduction.appendChild(divuser);
+             }
+             else
+             {
+                 listeTraduction.style.justifyContent = "flex-start";
+             }
+             for (let i = 0; i < traduction.length; i++) {
+                  let auteur;
+                  
+                 getUsernameFromId( traduction[i].UserId)
+                  .then(username => {
+                    if (username) {
+                       auteur = username;
+                       var divTraduction = document.createElement("div");
+                        divTraduction.className = "Traduction";
+                        divTraduction.id = traduction[i].Id;
+                    
+                        divTraduction.innerHTML = `
+                            <p id="Fr">${traduction[i].Fr}</p>
+                            <p id="Tr">${traduction[i].Tr}</p>
+                            <p id="Auteur">Traduit par ${auteur}</p>
+                        `;
+                    
+                        if ( traduction[i].Audio == 1) {
+                            divTraduction.innerHTML += `
+                                <div id="Icone">
+                                    <img style="height: 20px; margin-left: 3px;" class ="spk" src="img/Speaker.svg" alt="Icone speaker">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/Heart.svg" alt="Icone like">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/cross.svg" alt="Icone croix">
+                                </div>
+                            `;
+                            
+                            var lecture = divTraduction.querySelector('.spk');
+                            console.log("lecture",lecture);
+
+                            lecture.addEventListener('click',async () => {
+                                console.log("lire");
+                                lecture.src = "img/Speaker2.svg";
+                                    
+                                    const fileName = "enregistrementN"+traduction[i].Id+".wav";
+                                    console.log("fileName",fileName );
+                                    const storage = getStorage(app);
+                                    const storageRef = ref(storage, 'enregistrements/' + fileName);
+                        
+                                    try {
+                                        
+                                        const downloadURL = await getDownloadURL(storageRef);
+                                        const audioPlayer = new Audio(downloadURL);
+                        
+                                        audioPlayer.addEventListener('ended', () => {
+                                        console.log('Lecture audio terminée.');
+                                         lecture.src = "img/Speaker.svg";
+                                      
+                                    });
+                                        audioPlayer.play();
+                                    } catch (error) {
+                                        console.error('Erreur lors de la récupération du fichier audio:', error);
+                                    }
+                                });
+                        }
+                        else
+                        {
+                            divTraduction.innerHTML += `
+                                <div id="Icone">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/Heart.svg" alt="Icone like">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/cross.svg" alt="Icone croix">
+                                </div>
+                            `;
+                        }
+                    
+                        listeTraduction.appendChild(divTraduction);
+                        
+                        
+                              
+                            } else {
+                              console.log("Aucun utilisateur trouvé avec cet id");
+                            }
+                          });
+                                 
+                 
+             
+                
+            }
+         }
+         
+         function obtenirResultatsLangue(langue) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "getNmbInfo.php?langue=" + langue, true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var resultat = JSON.parse(xhr.responseText);
+        
+                   
+                    document.getElementById("totalTraductions").innerHTML = resultat.nombre_de_traductions + "<br>Traductions";
+                    document.getElementById("utilisateursDistincts").innerHTML = resultat.nombre_de_utilisateurs_distincts + "<br>Contributeurs";
+                    document.getElementById("traductionsAudio").innerHTML = resultat.nombre_de_traductions_audio + "<br>Audio";
+                }
+            };
+            xhr.send();
+        }
+
+
+var langueRecherchee = nom; 
+obtenirResultatsLangue(langueRecherchee);
+
+function rechercherTraductions(searchQuery, langue) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "getRecherche.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            traduction = JSON.parse(xhr.responseText);
+            if (traduction.length > 0) {
+                afficheTraduction();
+            } else {
+                afficheTraduction();
+            }
+        }
+    };
+
+    // Préparez les données à envoyer
+    var params = "search_query=" + encodeURIComponent(searchQuery) + "&langue=" + encodeURIComponent(langue);
+
+    // Envoyez la requête POST
+    xhr.send(params);
+}
+
+
+var searchInput = document.getElementById("search-input");
+
+searchInput.addEventListener("input", function () {
+    var searchString = searchInput.value.trim(); // Trim pour supprimer les espaces blancs au début et à la fin
+
+    
+    if (searchString.length > 2) {
+       console.log("recherche");
+       var maDivToSupp = document.getElementById("ListeTraduction"); 
+       maDivToSupp.innerHTML = "";
+
+        rechercherTraductions(searchString,nom); 
+    }
+    
+    if (searchString.length == 0) {
+        
+       var maDivToSupp = document.getElementById("ListeTraduction"); 
+       maDivToSupp.innerHTML = "";
+       getTranslations(langue);
+    }
+});
+
+      function placerVillage(name, posX, posY)
+       {
+            let customElement = document.createElement('div');
+            customElement.innerHTML = `  <div id = "livePoint"></div>`;
+                
+            var marker = new mapboxgl.Marker(customElement)
+                .setLngLat([posX,posY])
+                .addTo(map2);
+                
+       }
+      
+
+// map2.on('click', function(e) {
+
+//   var centerCoordinates = map2.getCenter();
+//   var zoom = map2.getZoom();
+//   console.log('Center Coordinates:', centerCoordinates);
+//   console.log('Zoom Level:', zoom);
+// });
+
+
+
+var modeA = 0;
+
+function changeMode()
+{
+
+   if(modeA ==0)
+   {
+       modeA = 1;
+   }
+   else
+   {
+       modeA = 0;
+   }
+   
+    var bouton = document.getElementById("addTr");
+    var inputElement = document.getElementById("search-input");
+
+
+
+
+
+   
+  
+    var maDiv = document.getElementById("ListeTraduction");
+    maDiv.innerHTML = "";
+    
+    if(modeA == 0)
+   {
+       afficheTraduction();
+       bouton.innerHTML = "Ajouter une traduction";
+       inputElement.placeholder = "Rechercher une traduction";
+   }
+   else
+   {
+      getDoc(nom);
+      bouton.innerHTML = "Ajouter un document";
+      inputElement.placeholder = "Rechercher un document";
+    
+   }
+    
+    
+
+   
+   
+}
+
+var maCaseACocher = document.getElementById("maCheckbox");
+maCaseACocher.addEventListener("click", changeMode);
+
+var documents;
+
+
+ function getDoc(langue) {
+     
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getDoc.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         documents = JSON.parse(xhr.responseText);
+                       
+
+                        console.log(documents);
+                          afficheDoc();
+                          
+                       
+                    }
+                };
+                xhr.send("langue=" + langue);
+            }
+            
+ function afficheDoc()
+ {
+            var listeTraduction = document.getElementById("ListeTraduction");
+           
+             
+             if(documents.length == 0)
+             {
+                  listeTraduction.style.justifyContent = "center";
+                  var divuser = document.createElement("div");
+                        divuser.className = "notr";
+                    
+                        divuser.innerHTML = `
+                            <p>Aucun document trouvé</p>
+                            <button onclick="NouvelleTr()">Ajouter un document</button>
+                        `;
+                    
+                        listeTraduction.appendChild(divuser);
+                        console.log("vide");
+             }
+             else
+             {
+                  console.log("non-vide");
+                 listeTraduction.style.justifyContent = "flex-start";
+             }
+             for (let i = 0; i < documents.length; i++) {
+                  let auteur;
+                  
+                 getUsernameFromId( documents[i].IdUser)
+                  .then(username => {
+                    if (username) {
+                       auteur = username;
+                       var divTraduction = document.createElement("div");
+                        divTraduction.className = "Document";
+                    
+                        divTraduction.innerHTML = `
+                            <h1>${documents[i].Titre}</h1>
+                            <p>${documents[i].Contenu}</p>
+                        `;
+                        
+                        if(documents[i].FileName != "nothing")
+                        {
+                              (async () => {
+                                  try {
+                                    const myUrl = await getUrl("Documents/"+nom+"/"+documents[i].Id+"-"+documents[i].FileName);
+                                    divTraduction.innerHTML += `
+                                      <a href="${myUrl}" target="_blank">
+                                        <button class="goToDoc">${documents[i].FileName}</button>
+                                      </a>
+                                    `;
+                                  } catch (error) {
+                                    // Gérer l'erreur, par exemple afficher une alerte
+                                    alert("Erreur : " + error.message);
+                                  }
+                                })();
+                        }
+                    
+                      
+                            divTraduction.innerHTML += `
+                                <div id="Icone">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/Heart.svg" alt="Icone like">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/cross.svg" alt="Icone croix">
+                                </div>
+                            `;
+                        
+                    
+                        listeTraduction.appendChild(divTraduction);
+                              
+                            } else {
+                              console.log("Aucun utilisateur trouvé avec cet id");
+                            }
+                          });
+                                
+            }
+            
+ }
+ 
+
+async function getUrl(nomFichier) {
+  const storage = getStorage(app);
+  const storageRef = ref(storage, nomFichier);
+
+  try {
+    const url = await getDownloadURL(storageRef);
+    return url;
+  } catch (error) {
+    console.error("Erreur lors de la récupération du fichier depuis Firebase Storage :", error);
+    throw error;
+  }
+}
+
+// Utilisation de la fonction pour récupérer et afficher un fichier
+const nomDuFichier = "Documents/Ewondo/6-loupe.png"; 
+//afficherFichierDepuisStorage(nomDuFichier);
+
+            
+          
+  </script>
+  <script>
+  
+ 
+
+      function NouvelleTr()
+{
+      const bt = document.getElementById('addTr');
+      console.log(bt.innerHTML);
+      
+      var queryString = window.location.search;
+        
+        // Créez un objet URLSearchParams à partir de la chaîne de requête
+        var params = new URLSearchParams(queryString);
+        
+        // Récupérez les valeurs des paramètres de requête
+        var nom = params.get('nom');
+     var storedUserEmail = localStorage.getItem("userEmailMyVillage");
+     var url;
+    if (storedUserEmail) {
+        if(bt.innerHTML == "Ajouter une traduction")
+        {
+            url = `nouvelleTraduction.html?nom=${encodeURIComponent(nom)}`;
+        }
+        else
+        {
+             url = `NewDocument.html?nom=${encodeURIComponent(nom)}`;
+        }
+       
+        window.location.href = url;
+    }
+    else if(bt.innerHTML == "Ajouter une traduction")
+    {
+        url = `loginPage.html?nom=${encodeURIComponent(nom)}`;
+        window.location.href = url;
+    }
+    else
+    {
+        url = `loginPage.html?nom=${encodeURIComponent(nom)}&doc=oui`;
+        window.location.href = url;
+    }
+}
+
+
+
+function openDoc(fileName)
+{
+    
+}
+
+
+      
+  </script>
+      
+      
+    </body>
+
+  
+</html>
+
+
+
+
+

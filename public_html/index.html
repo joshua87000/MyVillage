@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>My Village</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+<style>
+
+body
+{
+     margin: 0;
+          padding: 0;
+          
+          height: 100vh;
+}
+
+
+header
+{
+     position: absolute; top: 0; bottom: 0; width: 100%;
+     height: 60px;
+     background-color: rgba(255, 255, 255, 0.8);
+    
+}
+
+#ulNav
+{
+    display:flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+
+}
+
+.link
+{
+    margin:10px;
+     list-style: none;
+
+} 
+   .link a {
+    text-decoration: none; /* Supprimer le soulignement */
+    color: inherit; /* Utiliser la couleur héritée du parent (peut être définie sur "inherit" ou sur la couleur de votre choix) */
+     font-family: 'Futura', sans-serif;
+}
+
+#Conec
+{
+     margin-left: auto;
+}
+
+
+
+      @font-face {
+          font-family: 'Hakuna';
+          src: url('font/Hakuna Regular.ttf') format('truetype');
+        }
+        
+        @font-face {
+          font-family: 'Futura';
+          src: url('font/Futura Bold.otf') format('opentype');
+        }
+
+
+
+#map {
+ position: absolute; top: 0; bottom: 0; width: 100%; height: 100%;
+}
+
+#p1
+{
+    width:100%;
+    height:80%;
+    position:relative;
+}
+
+#p2
+{
+    width:100%;
+    position:relative;
+}
+
+h1
+{
+    position:absolute;
+    top :25%;
+    left:50%;
+    transform: translateX(-50%); 
+  text-align: center;
+  color: yellow;
+   font-family: 'Hakuna', sans-serif;
+
+font-size: 400%;
+}
+
+#Combo
+{
+    position:absolute;
+    top :50%;
+    left:50%;
+    transform: translateX(-50%); 
+    display:flex;
+    justify-content: center;
+    align-items: center;
+     
+
+}
+
+#fr
+{
+    border-radius: 44px;
+    border: 3px solid #959292;
+    background: rgba(255, 255, 255, 0.78);
+    color:black;
+     font-family: 'Futura', sans-serif;
+     padding:10px 15px 10px 15px;
+     margin :0px;
+     font-size:16px;
+}
+
+#Combo img
+{
+    height: 30px;
+    color:#959292 ;
+    margin:0px 20px 0px 20px;
+}
+
+.choixVillage
+{
+     border-radius: 44px;
+    border: 3px solid #959292;
+    background: rgba(255, 255, 255, 0.78);
+    color:black;
+     font-family: 'Futura', sans-serif;
+     padding:10px 15px 10px 15px;
+     margin :0px;
+      font-size:16px;
+}
+
+
+
+#recherche
+{
+    position:absolute;
+     transform: translateX(-50%); 
+    top :64%;
+    left:50%;
+     border-radius: 44px;
+    border: 3px solid #959292;
+    background: rgba(255, 255, 255, 0.78);
+    color:#959292;
+     font-family: 'Futura', sans-serif;
+     padding:10px 15px 10px 15px;
+     margin :0px;
+     width: 30%;
+}
+
+#Village
+{
+    display: flex;
+     border-radius: 44px;
+    border: 3px solid #959292;
+    background: rgba(255, 255, 255, 0.78);
+    color:black;
+     font-family: 'Futura', sans-serif;
+     padding:10px 15px 10px 15px;
+     margin :0px;
+     align-items: center;
+     overflow: hidden;
+}
+
+#Village p
+{
+    margin: 0px;
+
+}
+
+#Village img
+{
+    margin: 0px;
+    width: 10px;
+    height: 10px;
+    margin-left: 20px;
+    padding-top: 5px;
+
+}
+
+#village {
+    width: 150px; /* Largeur de votre div */
+    overflow: hidden; /* Cache tout ce qui dépasse */
+    border: 1px solid #ccc; /* Style de la bordure pour mieux visualiser */
+}
+
+#Village p {
+    animation: scroll 1s linear paused;
+    margin: 0;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateY(0%);
+    }
+    50% {
+        transform: translateY(150%);
+    }
+    50.01% {
+        transform: translateY(-150%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+#grad
+{
+     width: 100%;
+     height: 200px;
+     background: linear-gradient(to bottom, rgba(255,255,255,1),rgba(255,255,255,0));
+     position: absolute; top: 0; bottom: 0;
+}
+
+#map2 {
+ position: absolute; top: 0; bottom: 0; width: 100%; height: 900px;
+}
+
+#phrase
+{
+     font-family: 'Hakuna', sans-serif;
+     position: absolute; 
+     font-size:35px;
+     transform: translateX(-50%); 
+     top: 0; left: 50%;
+     text-align:center;
+}
+
+
+.hutImg
+{
+    width : 30px;
+}
+
+.divVillage
+{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+     cursor: pointer;
+}
+
+.divVillage p
+{
+    border-radius: 32px;
+border: 2px solid #67C537;
+background: rgba(217, 217, 217, 0.74);
+font-family: 'Hakuna', sans-serif;
+  font-size:14px;
+  margin:0px;
+  text-align:center;
+
+}
+
+#searchBox
+{
+position: fixed; top: 20%;
+            left :10%;
+}
+ #search-input
+        {
+           
+            border-radius: 50px;
+            border:none;
+            background-image: url("img/loupe.png");
+            background-repeat: no-repeat;
+            background-position: left center;
+            height:40px;
+            font-size:25px;
+            padding-left:50px;
+            font-family: 'Futura', sans-serif;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+           
+            opacity:0;
+            display:none;
+           
+           
+        }
+        .finded
+        {
+            background-color: white;
+              font-family: 'Futura', sans-serif;
+              font-size:25px;
+              padding: 10px;
+               border-bottom: 1px solid;
+        }
+
+        .finded p
+        {
+            margin:0px;
+        }
+        
+        .finded:hover
+        {
+            background-color:#ddd;
+        }
+
+
+
+
+
+</style>
+</head>
+<body>
+   
+    <div id = "p1">
+    
+    <div id="map"></div>
+    <header>
+        <nav>
+            <ul id = "ulNav">
+                <li class = "link"><a href="index.html">Accueil</a></li>
+                <li class = "link"><a href="index.html#p2">Voir la carte </a></li>
+                <li  class = "link"><a href="#">Contact</a></li>
+                <li class = "link" id ="Conec"><a href="loginPage.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>My Village</h1>
+    <div id = "Combo">
+        
+        <p id = "fr">Francais</p>
+        <img src="img/doubleFleche.svg" alt="Double fleche">
+
+        <div id = Village>
+            <p class ="scrolling-text">Douala</p>
+            <img src="img/downArrow.svg" alt="Double fleche">
+        </div>
+
+       <!--  <select class="choixVillage" name="Village">
+            <option value="pomme">Douala</option>
+            <option value="banane">Banane</option>
+            <option value="fraise">Fraise</option>
+            <option value="orange">Orange</option>
+        </select>  -->
+    </div>
+
+     <input type="text" name="q" id="recherche" placeholder="Traduire de Francais a Douala">
+
+    </div>
+    
+    <div id = "p2">
+        
+          <div id="map2"></div>
+          <div id ="grad"></div>
+          <p id = "phrase">Ensemble sauvegardons la culture de notre beau pays</p>
+          <div id ="searchBox">
+               <input type="text" id="search-input" placeholder="Rechercher un village" autocomplete="off" />
+          </div>
+        
+    </div>
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+var storedUserEmail = localStorage.getItem("userEmailMyVillage");
+
+if (storedUserEmail) {
+        
+        console.log("connecté",storedUserEmail);
+        const liElement = document.getElementById('Conec');
+        const aElement = liElement.querySelector('a');
+        aElement.textContent = 'Mon Compte';
+        aElement.href = 'monCompte.html';
+
+    } else {
+     
+      console.log("L'utilisateur n'est pas connecté.");
+    }
+
+      var maDiv = document.getElementById("map");
+
+          var MyZoom = 11.52;
+          var MyLat = 11.627;
+          var MyLong = 3.893;
+
+          mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/jooshuua8/cllhv6isr015q01pi0xq9e2ck',
+              zoom: MyZoom,
+              center :[MyLat,MyLong], scrollZoom: false, // Désactive le zoom avec la molette de la souris
+                boxZoom: false, // Désactive le zoom avec la boîte de sélection
+                dragRotate: false, // Désactive la rotation en faisant glisser la souris avec le bouton droit enfoncé
+                dragPan: false, // Désactive le déplacement en faisant glisser la carte
+                keyboard: false, // Désactive les raccourcis clavier
+                doubleClickZoom: false, // Désactive le zoom double-clic
+                touchZoomRotate: false // Désactive le zoom et la rotation sur les appareils tactiles
+              
+          });
+          
+           var maDiv2 = document.getElementById("map2");
+
+          var MyZoom2 = 5.6;
+          var MyLat2 = 12.42;
+          var MyLong2 = 8.16;
+
+        
+          var map2 = new mapboxgl.Map({
+              container: 'map2',
+              style: 'mapbox://styles/jooshuua8/cllffxl3p014b01p8gntqas6x',
+              zoom: MyZoom2,
+              center :[MyLat2,MyLong2],
+              minZoom: 5.6 
+          });
+
+        const scrollingText = document.querySelector('.scrolling-text');
+
+function startAnimation() {
+    scrollingText.style.animation = 'none';
+    void scrollingText.offsetWidth; // Trigger reflow for reanimation
+    scrollingText.style.animation = 'scroll 1s linear';
+    cmp++;
+         if(cmp == AllVillage.length)
+         {
+             cmp =0;
+         }
+         
+       
+        const inputElement = document.getElementById('recherche');
+        inputElement.placeholder = 'Traduire de Francais a '+ AllVillage[cmp].Nom;
+
+         
+         const Lat = parseFloat(AllVillage[cmp].Longitude)+0.1;
+         const Long = parseFloat(AllVillage[cmp].Lat)+0.075;
+          map.flyTo({
+            center: [Lat,Long],
+            essential: true,
+            duration: 4000
+        });
+         
+    
+
+     setTimeout(() => {
+         
+        scrollingText.textContent = AllVillage[cmp].Nom;
+    }, 500);
+
+   
+   
+}
+
+// Lancer l'animation toutes les 3 secondes
+
+
+const villageDiv = document.getElementById('Village');
+const selectElement = document.createElement('select');
+selectElement.className = 'choixVillage';
+selectElement.name = 'Village';
+
+// Crée les options du select
+
+
+// Ajoute un gestionnaire d'événements pour le clic sur la div
+var etatAnnimation = 1;
+function stopAnnimation()
+{
+  if(etatAnnimation == 1)
+  {
+    etatAnnimation = 0;
+    const options = [];
+    for(let i = 0 ; i < AllVillage.length ;i++)
+    {
+        options.push({value: AllVillage[cmp].Nom , text : AllVillage[cmp].Nom });
+        cmp++;
+         if(cmp == AllVillage.length)
+         {
+             cmp =0;
+         }
+        
+    }
+    
+    options.forEach(optionData => {
+        const option = document.createElement('option');
+        option.value = optionData.value;
+        option.textContent = optionData.text;
+        selectElement.appendChild(option);
+    });
+    
+    
+    
+    villageDiv.replaceWith(selectElement);
+    clearInterval(myInterval); 
+    selectElement2 = document.querySelector('.choixVillage');
+  }
+}
+
+villageDiv.addEventListener('click', function () {
+    
+    stopAnnimation();
+
+});
+
+var AllVillage;
+var cmp = 0;
+var myInterval;
+function getAllVillage() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "getAllVillage.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          
+             AllVillage = JSON.parse(xhr.responseText);
+             console.log(AllVillage);
+             myInterval = setInterval(startAnimation, 5000);
+             AfficheAllVillage();
+             
+              
+                
+             
+        }
+    };
+
+    xhr.send();
+}
+
+getAllVillage();
+
+const inputElement = document.getElementById('recherche');
+var selectElement2;
+
+inputElement.addEventListener('keydown', function(event) {
+    if (event.keyCode === 13) { 
+        console.log(selectElement2)
+        const inputValue = inputElement.value;
+        const selectValue = selectElement2.value;
+        
+        // Construire l'URL avec les valeurs et rediriger
+        const url = `monVillage.html?q=${encodeURIComponent(inputValue)}&nom=${encodeURIComponent(selectValue)}`;
+        window.location.href = url;
+    }
+});
+
+inputElement.addEventListener("input", function () {
+    var searchString = inputElement.value.trim(); // Trim pour supprimer les espaces blancs au début et à la fin
+    stopAnnimation();
+
+   
+});
+
+
+map2.on('click', function(e) {
+    
+    var coordinates = e.lngLat;
+    var zoom = map.getZoom();
+    console.log('Coordonnées du point cliqué : ' + coordinates.lng + ', ' + coordinates.lat);
+    console.log('Zoom : ' + zoom);
+    
+});
+
+function placerVillage(y,x,nom,it)
+{
+     let customElement = document.createElement('div');
+            customElement.innerHTML = `  <div class = "divVillage" id ="${it}">
+                                              <img class = "hutImg" src="img/hut.png" alt="image hut">
+                                              <p class ="txtVillage" style ="padding:5px; display:none">${nom}</p>
+                                          </div>`;
+                
+            var marker2 = new mapboxgl.Marker(customElement)
+                .setLngLat([x,y])
+                .addTo(map2);
+}
+
+function AfficheAllVillage()
+{
+        for(let i = 0 ; i < AllVillage.length ; i++)
+        {
+            placerVillage(AllVillage[i].Lat,AllVillage[i].Longitude,AllVillage[i].Nom,i);
+            getNmbTr(AllVillage[i].Nom,i);
+        }
+        
+        const divsVillage = document.querySelectorAll('.divVillage');
+    divsVillage.forEach(function(divVillage) {
+        
+        divVillage.addEventListener('mouseenter', function() {
+            
+            const imageElement = divVillage.querySelector('img');
+            imageElement.style.width = '50px'; 
+            const txt = divVillage.querySelector('p');
+            txt.style.display ="block";
+            txt.innerHTML =AllVillage[Number(divVillage.id)].Nom+"<br>"+AllVillage[Number(divVillage.id)].Nmb+" Traductions";
+            divVillage.parentNode.style.zIndex ="999";
+            
+            
+        });
+    
+        divVillage.addEventListener('mouseleave', function() {
+            
+            const imageElement = divVillage.querySelector('img');
+            imageElement.style.width = '30px';
+            const txt = divVillage.querySelector('p');
+            if(txtActiv == 0)
+            {
+                 txt.style.display ="none";
+            }
+            
+             
+            txt.innerHTML =AllVillage[Number(divVillage.id)].Nom;
+              divVillage.parentNode.style.zIndex ="0";
+        });
+    });
+    
+    var divs = document.querySelectorAll('.divVillage');
+    divs.forEach(function (div) {
+        div.addEventListener('click', function () {
+          
+        const url = `monVillage.html?nom=${encodeURIComponent(AllVillage[Number(div.id)].Nom)}`;
+        window.location.href = url;
+        });
+    });
+}
+
+  function getNmbTr(langue,i) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "getNmbInfo.php?langue=" + langue, true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var resultat = JSON.parse(xhr.responseText);
+                   AllVillage[i].Nmb = resultat.nombre_de_traductions;
+                }
+            };
+            xhr.send();
+        }
+        
+        
+var txtActiv = 0;
+
+function handleMapZoom() {
+  
+  const currentZoom = map2.getZoom();
+ 
+  if(currentZoom > 7 && txtActiv == 0)
+  {
+       console.log(currentZoom);
+      const elements = document.querySelectorAll('.txtVillage');
+
+
+        elements.forEach((element) => {
+          
+          element.style.display ="block"; 
+        
+        });
+        txtActiv = 1;
+  }
+  else if(currentZoom < 7 && txtActiv == 1)
+  {
+        const elements = document.querySelectorAll('.txtVillage');
+
+
+        elements.forEach((element) => {
+          
+          element.style.display ="none"; 
+        
+        });
+      txtActiv = 0;
+  }
+
+}
+
+
+map2.on('zoom', handleMapZoom);
+
+
+var windowElement = window;
+
+var afficheSearch = 0;
+
+
+windowElement.addEventListener("scroll", function() {
+
+  var scrollY = window.scrollY;
+  var windowHeight = window.innerHeight;
+  var documentHeight = document.documentElement.scrollHeight;
+  var middleOfPage = documentHeight / 1.3;
+
+
+  if (scrollY + windowHeight >= middleOfPage) {
+   
+   if(afficheSearch == 0)
+   {
+       console.log("L'utilisateur est au milieu de la page !");
+    fadeInElement();
+   }
+
+  }
+  else
+  {
+      if(afficheSearch == 1)
+   {
+       console.log("L'utilisateur est au milieu de la page !");
+    fadeOutElement();
+   }
+  }
+});
+
+ function fadeInElement() {
+            var element = document.getElementById("search-input");
+            var opacity = 0;
+            afficheSearch = 1;
+             element.style.display = "block";
+            var fadeInInterval = setInterval(function() {
+                if (opacity < 1) {
+                    opacity += 0.05; // Augmentez l'opacité par incréments de 0.05
+                    element.style.opacity = opacity;
+                } else {
+                    clearInterval(fadeInInterval); // Arrêtez l'animation lorsque l'opacité atteint 1
+                }
+            }, 50); // Répétez toutes les 50 millisecondes pour un effet fluide
+        }
+
+
+function fadeOutElement() {
+    var element = document.getElementById("search-input");
+    var opacity = 1;
+    afficheSearch = 0;
+    
+    var fadeOutInterval = setInterval(function() {
+        if (opacity > 0) {
+            opacity -= 0.05; // Diminue l'opacité par incréments de 0.05
+            element.style.opacity = opacity;
+        } else {
+            clearInterval(fadeOutInterval);
+            element.style.display = "none";
+        }
+    }, 10); // Répétez toutes les 50 millisecondes pour un effet fluide
+}
+
+
+      
+        var searchInput = document.getElementById("search-input");
+      
+
+        
+        searchInput.addEventListener("input", function() {
+            if(searchInput.value.length > 0)
+            {
+                 searchInput.style.borderRadius = "25px 25px 25px 25px";
+                  searchInput.style.borderRadius = "25px 25px 0px 0px";
+                var termeRecherche = searchInput.value.toLowerCase();
+                var villesCorrespondantes = [];
+
+                
+                for (var i = 0; i < AllVillage.length; i++) {
+                    var ville = AllVillage[i].Nom.toLowerCase();
+                     if (ville.startsWith(termeRecherche)) {
+                        villesCorrespondantes.push(AllVillage[i].Nom);
+                    }
+                }
+
+                afficherResultats(villesCorrespondantes);
+            }
+            else
+            {      searchInput.style.borderRadius = "25px 25px 25px 25px";
+                 var elements = document.querySelectorAll(".finded");
+                elements.forEach(function(element) {
+                  element.remove();
+                });
+            }
+        });
+
+        function afficherResultats(tab)
+        {
+
+            var elements = document.querySelectorAll(".finded");
+            elements.forEach(function(element) {
+              element.remove();
+            });
+
+
+             var parentDiv = document.getElementById("searchBox");
+            
+
+            for (let i = 0; i < tab.length; i++) {
+              var nouvelleDiv = document.createElement("div");
+
+              // Utilisez la propriété 'className' pour définir la classe CSS
+              nouvelleDiv.className = "finded";
+              nouvelleDiv.id = tab[i];
+
+              // Utilisez des guillemets inversés (`) pour interpoler la variable 'tab[i]'
+              nouvelleDiv.innerHTML = `<p>${tab[i]}</p>`;
+              if(i == (tab.length-1)){
+                nouvelleDiv.style.borderRadius = "0px 0px 25px 25px";
+                nouvelleDiv.style.border="none";
+              }
+              
+
+              parentDiv.appendChild(nouvelleDiv);
+            }
+            
+             var divs = document.querySelectorAll('.finded');
+            divs.forEach(function (div) {
+                div.addEventListener('click', function () {
+                  
+                const url = `monVillage.html?nom=${encodeURIComponent(div.id)}`;
+                window.location.href = url;
+                });
+            });
+            
+            
+       
+     
+   
+
+           
+
+        }
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

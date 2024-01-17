@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="UTF-8">
+    <title>Cameroun MapBox</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="ScrolAnimation.css">
+
+
+    <style>
+
+        body
+        {
+          
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          height: 100vh;
+          /* width: 100vh; */
+         
+        }
+
+        #map
+        {
+          position: absolute;
+          top: 0%;
+          left: 0%;
+          opacity: 0.8;
+          width: 100%;
+          height: 100%;
+        }
+
+        #titreLoginPage
+        {
+            position :absolute;
+            left:50%;
+            transform: translateX(-50%); 
+            color:yellow;
+            font-size:300%;
+             font-family: 'Hakuna', sans-serif;  
+             margin:0px;
+        }
+
+        #LoginBox
+        {
+            display:flex;
+            flex-direction : column;
+            position :absolute;
+            left:50%;
+            top:20%;
+            transform: translateX(-50%); 
+            width:500px;
+            height:500px;
+            background-color: rgba(255,255,255,0.63);
+           
+            border-radius : 15px;
+            align-items:center;
+            justify-content:center;
+            
+        }
+
+        .InfoLogin
+        {
+            height: 10%;
+            margin:10px;
+            width:75%;
+            border-radius: 10px;
+            border: 2px solid #908F8F; 
+            font-family: 'Futura', sans-serif; 
+            font-size:18px;
+            background-color: rgba(255,255,255,0);
+            padding-left:10px;
+        }
+
+        #emailBox
+        {
+          
+        }
+
+        #ConnectButton
+        {
+            background-color :#00B91E;
+            color:white;
+            border:none;
+        }
+        
+              #ConnectButton:hover {
+    background-color: #339542;
+}
+
+
+        #FacebookButton
+        {
+            background-color:white;
+            border:none;
+            display:flex;
+           
+           align-items:center;
+
+        }
+
+        #GoogleButton
+        {
+            background-color:white;
+            border:none;
+            display:flex;
+         
+           align-items:center;
+        }
+        
+        #GoogleButton:hover
+        {
+            background-color:#E9E6E6;
+        }
+
+        .txt
+        {
+            font-family: 'Futura', sans-serif; 
+            margin:3px;
+        }
+
+
+        @font-face {
+  font-family: 'Hakuna';
+  src: url('font/Hakuna Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Futura';
+  src: url('font/Futura Bold.otf') format('opentype');
+}
+
+#errorBox
+{
+    position:absolute;
+            left:50%;
+            top:15%;
+            transform: translateX(-50%); 
+            background-color :rgba(255,0,0,0.2);
+            color:red;
+            font-size:20px;
+            font-family: 'Futura', sans-serif; 
+            border-radius:15px;
+            padding:5px;
+            display: none;
+}
+
+header
+{
+     position: absolute; top: 0; bottom: 0; width: 100%;
+     height: 60px;
+     background-color: rgba(255, 255, 255, 0.8);
+    
+}
+
+#ulNav
+{
+    display:flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+
+}
+
+.link
+{
+    margin:10px;
+     list-style: none;
+
+} 
+   .link a {
+    text-decoration: none; /* Supprimer le soulignement */
+    color: inherit; /* Utiliser la couleur héritée du parent (peut être définie sur "inherit" ou sur la couleur de votre choix) */
+     font-family: 'Futura', sans-serif;
+}
+
+#Conec
+{
+     margin-left: auto;
+}
+
+
+
+    </style>
+
+  </head>
+    <body>
+     
+        
+        <div id='map'> </div>
+         <header>
+        <nav>
+            <ul id = "ulNav">
+                <li class = "link"><a href="index.html">Accueil</a></li>
+                <li class = "link"><a href="index.html#p2">Voir la carte </a></li>
+                <li  class = "link"><a href="#">Contact</a></li>
+                <li class = "link" id ="Conec"><a href="loginPage.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+        <a href="index.html">
+            <h1 id="titreLoginPage">My Village</h1>
+          </a>        
+             <div id = "errorBox">Firebase: Error (auth/email-already-in-use).</div>
+        <div id = "LoginBox">
+            <p id = "tra" class = "txt" style ="font-size:16px; margin-top:10px;  margin-bottom:10px; display:none">Connectez vous pour ajouter des traductions</p>
+            <input class ="InfoLogin" type="text" id="emailBox" name="Email" placeholder="Adresse e-mail">
+            <input  class ="InfoLogin" type="text" id="MdpBox" name="Mdp" placeholder="Mots de passe">
+            <button class ="InfoLogin" id = "ConnectButton">Connexion</button>
+            <button class ="InfoLogin" id = "GoogleButton"><img style ="height : 80%; margin-right :20px; "  src="img/logoGoogle.png" alt="Logo Google">Se connecter avec Google</button>
+           
+            <p class = "txt" style ="font-size:16px; color: #908F8F; margin-top:10px;">Pas de compte ?</p>
+            <a  id="monLien" href="SignInPage.html">
+                <p class="txt" style="font-size: 18px; color: #00B91E;">Créer un compte</p>
+            </a>
+              
+
+
+
+        </div>
+        
+          
+      
+
+
+        <script>
+        
+        
+        
+         var queryString = window.location.search;
+         var params = new URLSearchParams(queryString);
+         var nom = params.get('nom');
+         var doc = params.get('doc');
+         
+         if(doc)
+         {
+             const monLien = document.getElementById('monLien');
+             monLien.href = `SignInPage.html?nom=${encodeURIComponent(nom)}&doc=oui`;
+             
+              const md = document.getElementById("tra");
+              md.style.display = 'block';
+         }
+         else if(nom)
+         {
+             console.log(nom);
+             const monLien = document.getElementById('monLien');
+             monLien.href = `SignInPage.html?nom=${encodeURIComponent(nom)}`;
+             
+              const md = document.getElementById("tra");
+              md.style.display = 'block';
+         }
+         else
+         {
+             console.log("pas de nom");
+         }
+
+          var maDiv = document.getElementById("map");
+
+          var MyZoom = 11.52;
+          var MyLat = 11.627;
+          var MyLong = 3.893;
+
+          mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/jooshuua8/cllhv6isr015q01pi0xq9e2ck',
+              zoom: MyZoom,
+              center :[MyLat,MyLong]
+          });
+          
+          
+
+          
+         
+
+         
+
+        
+
+
+
+        </script>
+
+    </body>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        
+         var queryString = window.location.search;
+         var params = new URLSearchParams(queryString);
+         var nom = params.get('nom');
+     
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
+        import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+       
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyCjoNsmpZZdE-Qdx05AdDR_yksQteIdgzA",
+          authDomain: "myvillage-f841c.firebaseapp.com",
+          projectId: "myvillage-f841c",
+          storageBucket: "myvillage-f841c.appspot.com",
+          messagingSenderId: "1064715931888",
+          appId: "1:1064715931888:web:ee0f7112d22a8e3596f235",
+          measurementId: "G-XZHB36B75E"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+
+
+        const emailInput = document.getElementById("emailBox");
+    const passwordInput = document.getElementById("MdpBox");
+    const connectButton = document.getElementById("ConnectButton");
+    const errorBox = document.getElementById("errorBox");
+
+    // Ajoutez un gestionnaire d'événements au clic du bouton "Connexion"
+    connectButton.addEventListener("click", async () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      try {
+        // Connectez l'utilisateur avec l'e-mail et le mot de passe fournis
+        await signInWithEmailAndPassword(auth, email, password);
+
+        // Faites ce que vous souhaitez après la connexion réussie
+        console.log("Utilisateur connecté avec succès");
+        // Redirigez l'utilisateur vers une autre page par exemple
+         localStorage.setItem("userEmailMyVillage",email);
+         if(doc)
+         {
+              window.location.href = `NewDocument.html?nom=${encodeURIComponent(nom)}`;
+         }
+         else if(nom)
+         {
+            window.location.href = `nouvelleTraduction.html?nom=${encodeURIComponent(nom)}`;
+         }
+         else
+         {
+             window.location.href = "index.html"; 
+         }
+      } catch (error) {
+        console.error("Une erreur s'est produite lors de la connexion:", error);
+         errorBox.textContent = error.message;
+    errorBox.style.display = "block";
+      }
+    });
+
+
+   
+   const googleButton = document.getElementById("GoogleButton");
+
+    // Ajoutez un gestionnaire d'événements au clic du bouton "Se connecter avec Google"
+    googleButton.addEventListener("click", async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+        // Ouvrez une fenêtre contextuelle pour l'authentification Google
+        const result = await signInWithPopup(auth, provider);
+
+        // L'utilisateur est connecté via Google
+        const user = result.user;
+        console.log("Utilisateur connecté via Google:", user.email);
+        console.log(user.displayName);
+        enregistrerUtilisateur(user.email,user.displayName);
+        localStorage.setItem("userEmailMyVillage", user.email);
+         if(doc)
+         {
+              window.location.href = `NewDocument.html?nom=${encodeURIComponent(nom)}`;
+         }
+         else if(nom)
+         {
+            window.location.href = `nouvelleTraduction.html?nom=${encodeURIComponent(nom)}`;
+         }
+         else
+         {
+             window.location.href = "index.html"; 
+         }
+        
+       
+    } catch (error) {
+        console.error("Une erreur s'est produite lors de la connexion Google:", error);
+         errorBox.textContent = error.message;
+         errorBox.style.display = "block";
+    }
+    });
+    
+    
+    
+    function enregistrerUtilisateur(email, username) {
+          // Créer un objet XMLHttpRequest
+          var xhr = new XMLHttpRequest();
+          
+          // Définir la fonction de rappel pour gérer la réponse
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+              if (xhr.status === 200) {
+                // La requête s'est terminée avec succès, vous pouvez afficher la réponse
+                console.log(xhr.responseText);
+              } else {
+                // Il y a eu une erreur lors de la requête
+                console.error("Erreur lors de la requête : " + xhr.status);
+              }
+            }
+          };
+          
+          // Préparer la requête POST
+          xhr.open("POST", "saveUser.php", true);
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          
+          // Créer les données à envoyer dans la requête
+          var data = "email=" + encodeURIComponent(email) + "&username=" + encodeURIComponent(username);
+          
+          // Envoyer la requête avec les données
+          xhr.send(data);
+        }
+
+      </script>
+</html>
+
+
+
+
+

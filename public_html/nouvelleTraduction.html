@@ -1,0 +1,1629 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mon Compte</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+</head>
+<body>
+<style>
+
+body
+{
+     margin: 0;
+          padding: 0;
+            overflow-x: hidden;
+ 
+          
+          height: 100vh;
+}
+header
+{
+     position: absolute; top: 0; bottom: 0; width: 100%;
+     height: 60px;
+     background-color: rgba(255, 255, 255, 0.8);
+    
+}
+
+.container {
+  background-color: rgba(95, 68, 155,0);
+   position: absolute; top: 7%; bottom: 0; width: 100% ;height:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}   
+
+
+
+[class|="confetti"] {
+  position: absolute;
+}
+
+$colors: (#d13447, #ffbf00, #263672);
+
+@for $i from 0 through 150 {
+  $w: random(8);
+  $l: random(100);
+  .confetti-#{$i} {
+    width: #{$w}px;
+    height: #{$w*0.4}px;
+    background-color: nth($colors, random(3));
+    bottom: 0;
+    left: unquote($l+"%");
+    opacity: random() + 0.5;
+    transform: rotate(#{random()*360}deg);
+    animation: drop-#{$i} unquote(0.8+random()+"s") unquote(random()+"s") forwards;
+  }
+
+  @keyframes drop-#{$i} {
+    0% {
+      bottom: 0;
+      left: unquote($l+random(15)+"%");
+    }
+    50% {
+      bottom: 50%;
+    }
+    100% {
+      bottom: 0;
+      left: unquote($l+random(15)+"%");
+    }
+  }
+}
+
+#ulNav
+{
+    display:flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+
+}
+
+.link
+{
+    margin:10px;
+     list-style: none;
+
+} 
+   .link a {
+    text-decoration: none; /* Supprimer le soulignement */
+    color: inherit; /* Utiliser la couleur héritée du parent (peut être définie sur "inherit" ou sur la couleur de votre choix) */
+     font-family: 'Futura', sans-serif;
+}
+
+      @font-face {
+          font-family: 'Hakuna';
+          src: url('font/Hakuna Regular.ttf') format('truetype');
+        }
+        
+        @font-face {
+          font-family: 'Futura';
+          src: url('font/Futura Bold.otf') format('opentype');
+        }
+
+#Conec
+{
+     margin-left: auto;
+}
+
+#map {
+ position: absolute; top: 0; bottom: 0; width: 100%; height: 100%;
+}
+
+
+
+
+        
+      /* Style de la carte */
+.traduction {
+  background-color: white;
+  border-radius: 25px;
+  font-family: 'Futura', sans-serif;
+  width: 70%;
+  height: 80px;
+  padding: 20px;
+  position: relative;
+  margin-top: 20px;
+  perspective: 1000px; /* Ajoute une perspective */
+  cursor: pointer; /* Change le curseur au survol pour indiquer que la carte est cliquable */
+}
+
+/* Style de l'intérieur de la carte (contenant les faces avant et arrière) */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+ 
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.traduction:hover .flip-card-inner {
+  transform: rotateX(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+   background-color: white;
+}
+
+/* Style the back side */
+.flip-card-back {
+ 
+  transform: rotateX(180deg);
+}
+
+.traduction.flipped .flip-card-inner {
+  transform: rotateX(180deg); /* Applique le retournement lorsque la classe "flipped" est présente */
+}
+
+
+
+        
+        #Fr
+        {
+            font-size: 24px;
+            margin:5px;
+        }
+
+        #Fr2
+        {
+            font-size: 16px;
+            margin:5px;
+        }
+        
+        #Tr
+        {
+           color: #00B91E;
+           font-size: 16px;
+            margin:5px;
+        }
+        
+        #Auteur
+        {
+            position :absolute;
+            left:50%;
+            top:79%;
+            transform: translateX(-50%); 
+             font-size: 12px;
+             margin:0px;
+             height:20px;
+             text-align:center;
+        }
+        #Icone
+        {
+            position :absolute;
+            left:90%;
+            top:75%;
+            transform: translateX(-50%); 
+            display:flex;
+            opacity:0.5;
+              margin:0px;
+        }
+
+        #mainContent
+        {
+            position:absolute;
+            left:50%;
+            top:10%;
+            width: 95%;
+            height: 85%;
+             transform: translateX(-50%); 
+             
+             display: flex;
+             justify-content: center
+        }
+
+        .p
+        {
+             
+              margin:5%;
+              width: 40%;
+              height: 90%;
+                transition: width 0.2s linear;
+                 
+        }
+
+        #p2
+        {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+
+        #valider
+        {
+             border-radius: 17px;
+            background: #00B91E;
+            color:white;
+             font-family: 'Futura', sans-serif;
+             border:none;
+            
+           
+              padding: 10px;
+              width: 70%;
+              font-size: 24px;
+              margin-top: 30px;
+        }
+        
+           #valider:hover {
+    background-color: #339542;
+}
+
+        #trBox
+        {
+            border-radius: 33px;
+            background: rgba(255, 255, 255, 0.63);
+            display:flex;
+            flex-direction :column;
+            justify-content: center;
+            // align-items: center;
+              font-family: 'Futura', sans-serif;
+              padding-bottom: 30px;
+        }
+        
+        .fr
+        {
+            display: flex;
+            align-items: center;
+        }    
+
+        .inp::placeholder {
+            color: #959292; /* Couleur du placeholder */
+        }
+
+        .inp
+        {
+            border-radius: 17px;
+            border: 5px solid #D9D9D9;
+            background: #FFF;
+             font-family: 'Futura', sans-serif;
+             color: black;
+            font-size: 20px;
+            margin:10px;
+            width: 60%;
+            padding: 10px;
+        }
+  
+        #b1
+        {
+            border-radius: 17px;
+            background: #00B91E;
+            color:white;
+             font-family: 'Futura', sans-serif;
+             border:none;
+             width: 30%;
+           
+              padding: 10px;
+        }
+        
+                     #b1:hover {
+    background-color: #339542;
+}
+
+         #b2
+        {
+            border-radius: 17px;
+           border: 5px solid #D9D9D9;
+            background: #FFF;
+             font-family: 'Futura', sans-serif;
+             color:#959292 ;
+              width: 30%;
+               
+                padding: 10px;
+             
+        }
+        #inputDetail::placeholder
+        {
+            color:#959292 ;
+        }
+        #inputDetail
+        {
+             border-radius: 17px;
+            border: 5px solid #D9D9D9;
+            background: #FFF;
+             font-family: 'Futura', sans-serif;
+             color: black;
+            font-size: 20px;
+            margin:10px;
+            width: 60%;
+            padding: 10px;
+        }
+
+        #addAudio
+        {
+            border-radius: 17px;
+            background: #00B91E;
+            color:white;
+             font-family: 'Futura', sans-serif;
+             border:none;
+             width: 60%;
+             font-size: 20px;
+              padding: 10px;
+               margin:10px;
+              
+        }
+
+        #audioBox
+        {
+            width: 30%;
+              margin:10px;
+            
+              display: flex;
+              align-items: center;
+              justify-content: center;
+        }
+
+        #trBox h1
+        {
+            text-align: center;
+        }
+
+        #livePoint
+          {
+            background-color: #00B91E;
+            width: 50px;
+            height: 50px;
+           
+            border-radius: 50%;
+            box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); /* Ajouter l'ombre 360° autour du cercle */
+            animation: blink 2s infinite paused;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        
+          @keyframes blink {
+            0%, 100% {
+              box-shadow: 0 0 20px 5px rgba(0, 185, 30, 0.4); /* Opacité de l'ombre à 0.1 aux instants 0% et 100% */
+            }
+            50% {
+              box-shadow: 0 0 20px 5px rgba(0, 185, 30, 1); /* Opacité de l'ombre à 1 à l'instant 50% */
+            }
+          }
+
+          #livePoint img
+          {
+            height: 30px;
+            width: auto;
+          }
+          #verif
+          {
+              display:flex;
+                border-radius: 33px;
+            background: rgba(255, 255, 255, 0.63);
+          
+            justify-content: center;
+           align-items: center;
+              font-family: 'Futura', sans-serif;
+              width:70%;
+              margin-top:20px;
+              
+          }
+          
+          #maCaseACocher
+          {
+              width: 20px;
+              height: 20px; 
+              margin-right:10px;
+              
+          }
+          
+          #point
+          {
+                  font-family: 'Futura', sans-serif;
+                  display:none; 
+                  font-size:28px;
+                  margin: 0px;
+                  animation: scroll 0.5s linear paused;
+               
+          }
+          
+          @keyframes scroll {
+    0% {
+        transform: translateY(0%);
+    }
+    
+    100% {
+        transform: translateY(150%);
+    }
+    
+
+}
+
+          
+          #message
+          {
+               font-family: 'Futura', sans-serif;
+               display:none; 
+               font-size:28px;
+               margin:10px;
+               text-align:center;
+               
+              
+          }
+          #mesPoint
+          {
+               font-family: 'Futura', sans-serif;
+               display:none; 
+               font-size:28px;
+                 margin: 0px;
+               
+          }
+   
+
+          
+          #fin
+          {
+              display:none;
+              align-items:center;
+              justify-content:center;
+              width:100%;
+              
+          }
+          
+          #retour
+          {
+              width:60%;
+              margin:10px;
+               border-radius: 17px;
+            background: white;
+            color:black;
+             font-family: 'Futura', sans-serif;
+             border:none;
+             margin-top:40px;
+             padding :10px 20px 10px 20px;
+             font-size:28px;
+              margin-bottom:40px;
+          }
+          #retour:hover
+          {
+              background : #ede8e8;
+          }
+          #continuer
+          {
+              width:60%;
+              margin:10px;
+              border-radius: 17px;
+            background: #00B91E;
+            color:white;
+             font-family: 'Futura', sans-serif;
+             border:none;
+               margin-top:40px;
+             padding :10px 20px 10px 20px;
+             font-size:28px;
+             position: relative;
+    overflow: hidden;
+    margin-bottom:40px;
+          }
+          
+             #continuer:hover {
+    background-color: #339542;
+}
+          
+          #continuer:before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100%;
+    background-image: linear-gradient(
+        120deg,
+        rgba(255,255,255, 0) 30%,
+        rgba(255,255,255, .8),
+        rgba(255,255,255, 0) 70%
+    );
+    top: 0;
+    left: -100px;
+}
+
+@keyframes shine {
+    0% {left: -100px}
+    20% {left: 100%}
+    100% {left: 100%}
+}
+
+ #continuer:before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100%;
+    background-image: linear-gradient(
+        120deg,
+        rgba(255,255,255, 0) 30%,
+        rgba(255,255,255, .8),
+        rgba(255,255,255, 0) 70%
+    );
+    top: 0;
+    left: -100px;
+    animation: shine 2.2s infinite linear; /* Animation */
+}
+
+#scrollBox
+{
+     overflow: hidden;
+}
+
+</style>
+
+<div id="map"></div>
+   <header>
+        <nav>
+            <ul id = "ulNav">
+                <li class = "link"><a href="index.html">Accueil</a></li>
+                <li class = "link"><a href="index.html#p2">Voir la carte </a></li>
+                <li  class = "link"><a href="#">Contact</a></li>
+                <li class = "link" id ="Conec"><a href="loginPage.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+     <div class='container'>
+    <div id='fa' style='height:100%; width:100%;'></div>
+  </div>
+  <canvas id='canvas'></canvas> 
+
+    <div id ="mainContent">
+        <div class = "p" id = "p1">
+            <div id = "trBox">
+                <h1 id = "titre">Traduire de francais a Douala</h1>
+                <div class = "fr">
+                     <input class = "inp" id= "inputFr" type="text"  name="traductionFr" placeholder="Traduction en Francais">
+                     <button id = "b1">Génerer un mots aléatoire</button>
+                </div>
+                  <div class = "fr">
+                     <input class = "inp" id= "inputtr" type="text"  name="traduction" placeholder="Traduction en Douala">
+                     <button id = "b2">Caractere spéciaux</button>
+                </div>
+          <textarea id="inputDetail" name="message" rows="4" cols="50" placeholder="Informations suplementaires"></textarea>
+          <div class = "fr">
+                  <button id = "addAudio">Ajouter un audio</button> 
+                  <div id = audioBox style = "display: none;"> 
+                      <div id = "livePoint">
+                        <img src="img/micro3.svg" alt="micro">
+                      </div>
+                  </div>
+          </div>
+            
+                
+            </div>
+        </div>
+        <div class = "p" id = "p2">
+             <p id = "message"> Votre traduction a bien été enregistré !</p>
+             <div id ="scrollBox">
+                <p id = "point"> +2</p>
+            </div>
+            <p id = "mesPoint">65 points</p>
+            
+          <div class="traduction" id="maCarte">
+  <div class="flip-card-inner">
+    <!-- Face avant (contenu actuel) -->
+     <div class="flip-card-front">
+    <p id="Fr">Francais</p>
+    <p id="Tr">Douala</p>
+    <p id="Auteur"></p>
+    <div id="Icone">
+      <img style="height: 20px; margin-left: 3px;" src="img/Heart.svg" alt="Icone like">
+      <img style="height: 20px; margin-left: 3px;" src="img/cross.svg" alt="Icone croix">
+    </div>
+     </div>
+    
+    <!-- Face arrière (nouveau contenu) -->
+    <div class="flip-card-back">
+     <p id="Fr2">Informations suplementaires</p>
+    </div>
+  </div>
+</div>
+
+<div id = "verif">
+    <input type="checkbox" id="maCaseACocher">
+    <p id = "txtValid">Je certifie l'autentisité de cette traduction</p>
+</div>
+
+            <button id = "valider">Valider</button> 
+            <div id ="fin">
+                 <button id = "retour">Retourner au menu</button> 
+                 <button id = "continuer">Continuer a traduire</button> 
+            </div>
+        </div>
+
+    </div>
+    
+   
+
+
+  <script type="module">
+
+        var queryString = window.location.search;
+        var params = new URLSearchParams(queryString);
+        var nom = params.get('nom');
+        
+        const inputElement4 = document.getElementById('inputtr');
+        inputElement4.placeholder = 'Traduction en '+nom;
+        
+        const element5 = document.getElementById('Tr');
+        element5.textContent = nom;
+        
+        const element9 = document.getElementById('titre');
+        element9.textContent = 'Traduire de Francais a '+nom;
+
+
+ var storedUserEmail = localStorage.getItem("userEmailMyVillage");
+ console.log(storedUserEmail);
+ 
+  var maDiv = document.getElementById("map");
+
+          var MyZoom = 11.52;
+          var MyLat = 11.627;
+          var MyLong = 3.893;
+
+          mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/jooshuua8/cllhv6isr015q01pi0xq9e2ck',
+              zoom: MyZoom,
+              center :[MyLat,MyLong]
+          });
+          
+          
+                            function resizeMap()
+{
+     const hauteurDeLaPage = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight,
+      document.body.clientHeight,
+      document.documentElement.clientHeight
+    );
+    
+    console.log("Hauteur totale de la page (y compris le scroll) : " + hauteurDeLaPage + " pixels");
+    maDiv.style.height = hauteurDeLaPage+"px";
+       map.resize();
+}
+
+   resizeMap();
+          
+window.addEventListener('resize', function () {
+   
+   
+    resizeMap();
+    console.log("resize");
+   
+
+});
+
+          
+          
+var user;
+        
+        function getUser(Email) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getUser.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         user = JSON.parse(xhr.responseText);
+                        if (user.length > 0) {
+
+                         console.log(user);
+                     
+                         
+                          const liElement = document.getElementById('Conec');
+                            const aElement = liElement.querySelector('a');
+                            aElement.textContent = user[0].Username;
+                            aElement.href = 'monCompte.html';
+                            // Sélectionnez les éléments avec la classe "note"
+                           
+                            console.log(user);
+                            const element10 = document.getElementById('Auteur');
+                            element10.textContent = "Traduit par "+user[0].Username;
+        
+                           
+
+                        
+                        } else {
+                            console.log("Aucune traduction trouvée pour cette langue.");
+                        }
+                    }
+                };
+                xhr.send("langue=" + Email);
+            }
+            getUser(storedUserEmail);
+
+
+    // Sélectionnez l'élément input et l'élément p
+    var inputFr = document.getElementById('inputFr');
+    var pFr = document.getElementById('Fr');
+
+    // Ajoutez un écouteur d'événement pour surveiller les changements dans l'élément input
+    inputFr.addEventListener('input', function() {
+        // Mettez à jour le contenu de l'élément p avec la valeur de l'élément input
+        pFr.textContent = inputFr.value;
+    });
+
+    var inputTr = document.getElementById('inputtr');
+    var pTr = document.getElementById('Tr');
+
+    // Ajoutez un écouteur d'événement pour surveiller les changements dans l'élément input
+    inputTr.addEventListener('input', function() {
+        // Mettez à jour le contenu de l'élément p avec la valeur de l'élément input
+        pTr.textContent = inputTr.value;
+    });
+
+    // Récupérez l'élément de la carte
+const maCarte = document.getElementById('maCarte');
+
+// Récupérez l'élément de la zone de texte
+const inputDetail = document.getElementById('inputDetail');
+
+var flipped = 0;
+
+var monTimeoutId; 
+
+function init() {
+   maCarte.classList.toggle('flipped');
+   flipped = 0;
+}
+
+
+function flipCard() {
+    if(flipped == 0)
+    {
+        maCarte.classList.toggle('flipped');
+        flipped = 1;
+        monTimeoutId = setTimeout(init, 2500);
+    }
+    else
+    {
+        clearTimeout(monTimeoutId);
+         monTimeoutId = setTimeout(init, 2500);
+    }
+    
+}
+
+// Ajoutez un gestionnaire d'événements à la zone de texte pour déclencher le flip lors de la saisie
+inputDetail.addEventListener('input', flipCard);
+
+
+    var pTr2 = document.getElementById('Fr2');
+
+    // Ajoutez un écouteur d'événement pour surveiller les changements dans l'élément input
+    inputDetail.addEventListener('input', function() {
+        // Mettez à jour le contenu de l'élément p avec la valeur de l'élément input
+        pTr2.textContent = inputDetail.value;
+    });
+
+const boutonAjouterAudio = document.getElementById('addAudio');
+const divAudioBox = document.getElementById('audioBox');
+
+var audio = 0;
+ var autorisation = 0;
+
+
+   
+const boutonEnregistrer = document.getElementById('addAudio');
+ const audioPlayer = document.getElementById('audioPlayer');
+
+
+ var mediaRecorder;
+ var audioChunks = [];
+
+function maFonctionb() {
+
+   if(audio == 0)
+   {
+     if(autorisation == 0)
+     {
+         navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        autorisation = 1;
+                        audio = 1;
+                        boutonAjouterAudio.textContent = "Appuyez sur le micro pour lancer l'enregistrment";
+                        divAudioBox.style.display = 'flex';
+
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = event => {
+                            if (event.data.size > 0) {
+                                audioChunks.push(event.data);
+                            }
+                        };
+
+                         mediaRecorder.onstop = () => {
+
+                            const livePoint = document.getElementById('livePoint');
+                            const audioPlayer = document.createElement('audio');
+                            audioPlayer.setAttribute('id', 'audioPlayer');
+                            audioPlayer.setAttribute('controls', 'true');
+                            
+                            clearInterval(intervalPoint);
+
+                               
+                            livePoint.parentNode.insertBefore(audioPlayer, livePoint);
+
+                            scorePlus=scorePlus+5;
+                            livePoint.parentNode.removeChild(livePoint);
+                            boutonAjouterAudio.textContent = "supprimer l'enregistrement";
+                            boutonAjouterAudio.style.backgroundColor ="red";
+                            boutonAjouterAudio.style.transition = 'width 0.5s ease';
+                            boutonAjouterAudio.style.width = '40%'; 
+
+                            divAudioBox .style.transition = 'width 0.5s ease';
+                            divAudioBox .style.width = '50%'; 
+                             
+
+
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            audioPlayer.src = audioUrl;
+                            audio = 3;
+                        };
+
+         })
+        .catch(error => {
+            console.error('Erreur lors de l\'obtention de l\'accès au microphone:', error);
+        });
+     }
+     else
+     {
+        audio = 1;
+        boutonAjouterAudio.textContent = "Appuyez sur le micro pour lancer l'enregistrment";
+        divAudioBox.style.display = 'flex';
+     }
+     
+   }
+
+   if(audio == 3)
+   {
+       scorePlus = scorePlus - 5;
+        boutonAjouterAudio.textContent = "Ajouter un audio";
+        boutonAjouterAudio.style.backgroundColor ="#00B91E";
+        boutonAjouterAudio.style.transition = 'width 0.5s ease';
+        boutonAjouterAudio.style.width = '60%'; 
+
+        divAudioBox .style.transition = 'width 0.5s ease';
+        divAudioBox .style.width = '30%'; 
+         divAudioBox.style.display = 'none';
+
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const livePoint = document.createElement('div');
+        livePoint.id = 'livePoint';
+        const img = document.createElement('img');
+        img.src = 'img/micro3.svg';
+        img.alt = 'micro';
+        livePoint.appendChild(img);
+        audioPlayer.replaceWith(livePoint);
+        livePoint.addEventListener('click', maFonction3);
+        divLivePoint =  livePoint;
+
+
+        audio = 0;
+        audioChunks = [];
+
+
+   }
+   
+}
+
+boutonEnregistrer.addEventListener('click', maFonctionb);
+
+
+var divLivePoint = document.getElementById('livePoint');
+var intervalPoint;
+var cmpPoint =0;
+
+function loading() {
+    if(cmpPoint == 0)
+    {
+         boutonAjouterAudio.textContent = "Enregistrement en cours";
+    }
+    else if(cmpPoint == 1)
+    {
+        boutonAjouterAudio.textContent = "Enregistrement en cours.";
+    }
+     else if(cmpPoint == 2)
+    {
+        boutonAjouterAudio.textContent = "Enregistrement en cours..";
+    }
+     else if(cmpPoint == 3)
+    {
+        boutonAjouterAudio.textContent = "Enregistrement en cours...";
+    }
+    
+    cmpPoint++;
+    if(cmpPoint == 4)
+    {
+        cmpPoint = 0;
+    }
+   
+}
+
+
+
+
+function maFonction3() {
+    if(audio==1)
+    { 
+        
+        divLivePoint.style.animationPlayState = 'running';
+        boutonAjouterAudio.textContent = "Enregistrement en cours";
+        cmpPoint = 1;
+        intervalPoint = setInterval(loading, 700); 
+        audio = 2;
+
+          mediaRecorder.start();
+                        setTimeout(() => {
+                            mediaRecorder.stop();
+                        }, 5000); // Arrêter l'enregistrement après 5 secondes
+    }
+
+    else if(audio == 2)
+    {
+         mediaRecorder.stop();
+    }
+   
+   
+}
+divLivePoint.addEventListener('click', maFonction3);
+
+
+        document.getElementById('valider').addEventListener('click', function() {
+            const caseACocher = document.getElementById('txtValid');
+            const box = document.getElementById('maCaseACocher');
+            
+            const inputFr = document.getElementById('inputFr');
+            const inputTr = document.getElementById('inputtr');
+            
+            let cmpV = 0;
+
+            // Vérifie si la case à cocher est cochée
+            if (!box.checked) {
+                caseACocher.style.color = 'red';
+               
+            } else {
+                caseACocher.style.color = 'black'; // Réinitialise la couleur de bordure
+                cmpV++;
+            }
+
+            // Vérifie si les champs de texte sont vides
+            if (inputFr.value === '') {
+                inputFr.style.borderColor = 'red';
+            } else {
+                inputFr.style.borderColor = ''; // Réinitialise la couleur de bordure
+                cmpV++;
+            }
+
+            if (inputTr.value === '') {
+                inputTr.style.borderColor = 'red';
+            } else {
+                inputTr.style.borderColor = ''; // Réinitialise la couleur de bordure
+                cmpV++;
+            }
+            
+            if(cmpV == 3)
+            {
+                enregistrerTraduction();
+                
+                const p1 = document.getElementById('p1');
+                const p2 = document.getElementById('p2');
+                const trBox = document.getElementById('trBox');
+                const txtV = document.getElementById('verif');
+                const valid = document.getElementById('valider');
+                const fin = document.getElementById('fin');
+                 const point = document.getElementById('point');
+                  const message = document.getElementById('message');
+                  
+                  document.body.style.overflow = "hidden";
+
+
+                 
+                
+                // Supprime la div p1
+                trBox.parentNode.removeChild(trBox);
+                txtV.parentNode.removeChild(txtV);
+                valid.parentNode.removeChild(valid);
+                p1.style.width = '0%';
+                p1.style.margin = '0px';
+                
+                point.style.display ='block';
+                message.style.display ='block';
+                mp.style.display="block";
+                fin.style.display='flex';
+                 
+                 point.textContent ="+"+scorePlus
+                mp.textContent = user[0].Score +"points";
+                
+        
+                // Augmente la largeur de la div p2 à 80% avec la transition CSS
+                p2.style.width = '50%';
+                  setTimeout(ajoutPoint, 1000); 
+                   setTimeout(() => {
+                   startAnimation();
+            }, 300);
+                }
+            
+            
+        });
+        
+        function ajoutPoint() {
+          const point = document.getElementById('point');
+        
+           point.style.animationPlayState = 'running';
+           setTimeout(() => {
+                 point.style.transform = "translateY(150%)";
+                 intervalScore = setInterval(augmenterScore, 100);
+            }, 500);
+
+      }
+      
+       const mp = document.getElementById('mesPoint');
+      var scorePlus = 5;
+       var intervalScore;
+      
+      function augmenterScore()
+      {
+          
+          if(scorePlus > 0)
+          {
+              let s = parseInt(user[0].Score) +1;
+              user[0].Score = s;
+              
+               mp.textContent = s +" points";
+               scorePlus--;
+          }
+          else
+          {
+              clearInterval(intervalScore);
+          }
+      }
+      
+      function retourMenu()
+        {
+             const url = `monVillage.html?nom=${encodeURIComponent(nom)}`;
+             window.location.href = url;
+        }
+        
+        function NouvelleTr()
+        {
+            const url = `nouvelleTraduction.html?nom=${encodeURIComponent(nom)}`;
+            window.location.href = url;
+        }
+        
+function enregistrerTraduction() {
+    console.log("ajout de la traduction");
+
+    var Fr = document.getElementById('inputFr').value;
+    var Tr = document.getElementById('inputtr').value;
+    var InfoSup = document.getElementById('inputDetail').value;
+    var userId = Number(user[0].Id);
+    var langue = nom;
+
+  
+    var formData = new FormData();
+    formData.append('Fr', Fr);
+    formData.append('Tr', Tr);
+    formData.append('InfoSup', InfoSup);
+    formData.append('userId', userId);
+    formData.append('langue', langue);
+    if(audio == 3)
+    {
+         formData.append('audio',1);
+    }
+    else
+    {
+         formData.append('audio',0);
+    }
+   
+    
+
+    axios.post('addTrad.php', formData)
+        .then(function (response) {
+           
+            console.log(response.data);
+            var nouvelEnregistrementId = parseInt(response.data.match(/\d+/)[0]);
+            console.log("ID de mon nouvel enregistrement : " + nouvelEnregistrementId);
+
+            ajouterPoints(user[0].Email, scorePlus);
+            if(audio == 3)
+            {
+                SaveAudio(nouvelEnregistrementId);
+            }
+        })
+        .catch(function (error) {
+            // Gestion des erreurs
+            console.error('Erreur lors de l\'envoi des données :', error);
+            alert("Une erreur s'est produite.");
+        });
+}
+
+
+function ajouterPoints(email, pointsToAdd) {
+  // Créez un objet de données à envoyer au serveur
+  const data = {
+    email: email,
+    pointsToAdd: pointsToAdd
+  };
+
+  // Effectuez une requête AJAX POST vers le fichier PHP
+  $.ajax({
+    type: "POST",
+    url: "addPoint.php", // Remplacez par le chemin de votre fichier PHP
+    data: data,
+    success: function(response) {
+      // Réponse du serveur en cas de succès
+      console.log(response);
+      // Vous pouvez effectuer d'autres actions ici en fonction de la réponse
+    },
+    error: function(error) {
+      // Gestion des erreurs en cas d'échec de la requête
+      console.error("Erreur de requête AJAX : " + error.statusText);
+    }
+  });
+}
+
+function rechercherEnregistrementSansMot(langue) {
+  
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "getExpression.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+   
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+           
+            var reponse = JSON.parse(xhr.responseText);
+
+            
+            if (reponse.message) {
+                alert(reponse.message); 
+            } else {
+               
+                console.log(reponse);
+                var inputElement = document.getElementById("inputFr");
+                inputElement.value = reponse.Mots;
+                var pFr = document.getElementById('Fr');
+                pFr.textContent = inputElement.value;
+   
+            }
+        }
+    };
+
+   
+    xhr.send("mot=" + langue);
+}
+
+
+
+function genererTr()
+{
+ 
+    rechercherEnregistrementSansMot("Douala");
+}
+ document.getElementById('b1').addEventListener('click', genererTr);
+  document.getElementById('retour').addEventListener('click', retourMenu);
+   document.getElementById('continuer').addEventListener('click', NouvelleTr);
+ 
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+        import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
+
+function SaveAudio(id)
+{
+       
+
+          const firebaseConfig = {
+          apiKey: "AIzaSyCjoNsmpZZdE-Qdx05AdDR_yksQteIdgzA",
+          authDomain: "myvillage-f841c.firebaseapp.com",
+          databaseURL: "https://myvillage-f841c-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "myvillage-f841c",
+          storageBucket: "myvillage-f841c.appspot.com",
+          messagingSenderId: "1064715931888",
+          appId: "1:1064715931888:web:ee0f7112d22a8e3596f235",
+          measurementId: "G-XZHB36B75E"
+        };
+
+        // Initialisez Firebase
+        const app = initializeApp(firebaseConfig);
+        
+        const storage = getStorage(app);
+            const storageRef = ref(storage, 'enregistrements/enregistrementN'+id+'.wav');
+            const audioBlob2 = new Blob(audioChunks, { type: 'audio/wav' });
+        
+            const metadata = {
+                contentType: 'audio/wav'
+            };
+        
+            uploadBytes(storageRef, audioBlob2, metadata).then(snapshot => {
+                console.log('Enregistrement audio téléchargé avec succès !');
+            }).catch(error => {
+                console.error('Erreur lors du téléchargement de l\'enregistrement audio :', error);
+            });
+}
+
+
+
+
+
+
+     
+</script>
+
+
+<script>
+
+
+
+window.requestAnimFrame = ( function() {
+    return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                function( callback ) {
+                    window.setTimeout( callback, 1000 / 60 );
+                };
+})();
+
+// now we will setup our basic variables for the demo
+var canvas = document.getElementById( 'canvas' ),
+        ctx = canvas.getContext( '2d' ),
+        // full screen dimensions
+        cw = window.innerWidth,
+        ch = window.innerHeight,
+        // firework collection
+        fireworks = [],
+        // particle collection
+        particles = [],
+        // starting hue
+        hue = 120,
+        // when launching fireworks with a click, too many get launched at once without a limiter, one launch per 5 loop ticks
+        limiterTotal = 5,
+        limiterTick = 0,
+        // this will time the auto launches of fireworks, one launch per 80 loop ticks
+        timerTotal = 80,
+        timerTick = 0,
+        mousedown = false,
+        // mouse x coordinate,
+        mx,
+        // mouse y coordinate
+        my;
+        
+// set canvas dimensions
+canvas.width = cw;
+canvas.height = ch;
+
+// now we are going to setup our function placeholders for the entire demo
+
+// get a random number within a range
+function random( min, max ) {
+    return Math.random() * ( max - min ) + min;
+}
+
+// calculate the distance between two points
+function calculateDistance( p1x, p1y, p2x, p2y ) {
+    var xDistance = p1x - p2x,
+            yDistance = p1y - p2y;
+    return Math.sqrt( Math.pow( xDistance, 2 ) + Math.pow( yDistance, 2 ) );
+}
+
+// create firework
+function Firework( sx, sy, tx, ty ) {
+    // actual coordinates
+    this.x = sx;
+    this.y = sy;
+    // starting coordinates
+    this.sx = sx;
+    this.sy = sy;
+    // target coordinates
+    this.tx = tx;
+    this.ty = ty;
+    // distance from starting point to target
+    this.distanceToTarget = calculateDistance( sx, sy, tx, ty );
+    this.distanceTraveled = 0;
+    // track the past coordinates of each firework to create a trail effect, increase the coordinate count to create more prominent trails
+    this.coordinates = [];
+    this.coordinateCount = 3;
+    // populate initial coordinate collection with the current coordinates
+    while( this.coordinateCount-- ) {
+        this.coordinates.push( [ this.x, this.y ] );
+    }
+    this.angle = Math.atan2( ty - sy, tx - sx );
+    this.speed = 2;
+    this.acceleration = 1.05;
+    this.brightness = random( 50, 70 );
+    // circle target indicator radius
+    this.targetRadius = 1;
+}
+
+// update firework
+Firework.prototype.update = function( index ) {
+    // remove last item in coordinates array
+    this.coordinates.pop();
+    // add current coordinates to the start of the array
+    this.coordinates.unshift( [ this.x, this.y ] );
+    
+    // cycle the circle target indicator radius
+    if( this.targetRadius < 8 ) {
+        this.targetRadius += 0.3;
+    } else {
+        this.targetRadius = 1;
+    }
+    
+    // speed up the firework
+    this.speed *= this.acceleration;
+    
+    // get the current velocities based on angle and speed
+    var vx = Math.cos( this.angle ) * this.speed,
+            vy = Math.sin( this.angle ) * this.speed;
+    // how far will the firework have traveled with velocities applied?
+    this.distanceTraveled = calculateDistance( this.sx, this.sy, this.x + vx, this.y + vy );
+    
+    // if the distance traveled, including velocities, is greater than the initial distance to the target, then the target has been reached
+    if( this.distanceTraveled >= this.distanceToTarget ) {
+        createParticles( this.tx, this.ty );
+        // remove the firework, use the index passed into the update function to determine which to remove
+        fireworks.splice( index, 1 );
+    } else {
+        // target not reached, keep traveling
+        this.x += vx;
+        this.y += vy;
+    }
+}
+
+// draw firework
+Firework.prototype.draw = function() {
+    ctx.beginPath();
+    // move to the last tracked coordinate in the set, then draw a line to the current x and y
+    ctx.moveTo( this.coordinates[ this.coordinates.length - 1][ 0 ], this.coordinates[ this.coordinates.length - 1][ 1 ] );
+    ctx.lineTo( this.x, this.y );
+    ctx.strokeStyle = 'hsl(' + hue + ', 100%, ' + this.brightness + '%)';
+    ctx.stroke();
+    
+    ctx.beginPath();
+    // draw the target for this firework with a pulsing circle
+    ctx.arc( this.tx, this.ty, this.targetRadius, 0, Math.PI * 2 );
+    ctx.stroke();
+}
+
+// create particle
+function Particle( x, y ) {
+    this.x = x;
+    this.y = y;
+    // track the past coordinates of each particle to create a trail effect, increase the coordinate count to create more prominent trails
+    this.coordinates = [];
+    this.coordinateCount = 5;
+    while( this.coordinateCount-- ) {
+        this.coordinates.push( [ this.x, this.y ] );
+    }
+    // set a random angle in all possible directions, in radians
+    this.angle = random( 0, Math.PI * 2 );
+    this.speed = random( 1, 10 );
+    // friction will slow the particle down
+    this.friction = 0.95;
+    // gravity will be applied and pull the particle down
+    this.gravity = 1;
+    // set the hue to a random number +-20 of the overall hue variable
+    this.hue = random( hue - 20, hue + 20 );
+    this.brightness = random( 50, 80 );
+    this.alpha = 1;
+    // set how fast the particle fades out
+    this.decay = random( 0.015, 0.03 );
+}
+
+// update particle
+Particle.prototype.update = function( index ) {
+    // remove last item in coordinates array
+    this.coordinates.pop();
+    // add current coordinates to the start of the array
+    this.coordinates.unshift( [ this.x, this.y ] );
+    // slow down the particle
+    this.speed *= this.friction;
+    // apply velocity
+    this.x += Math.cos( this.angle ) * this.speed;
+    this.y += Math.sin( this.angle ) * this.speed + this.gravity;
+    // fade out the particle
+    this.alpha -= this.decay;
+    
+    // remove the particle once the alpha is low enough, based on the passed in index
+    if( this.alpha <= this.decay ) {
+        particles.splice( index, 1 );
+    }
+}
+
+// draw particle
+Particle.prototype.draw = function() {
+    ctx. beginPath();
+    // move to the last tracked coordinates in the set, then draw a line to the current x and y
+    ctx.moveTo( this.coordinates[ this.coordinates.length - 1 ][ 0 ], this.coordinates[ this.coordinates.length - 1 ][ 1 ] );
+    ctx.lineTo( this.x, this.y );
+    ctx.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
+    ctx.stroke();
+}
+
+// create particle group/explosion
+function createParticles( x, y ) {
+    // increase the particle count for a bigger explosion, beware of the canvas performance hit with the increased particles though
+    var particleCount = 30;
+    while( particleCount-- ) {
+        particles.push( new Particle( x, y ) );
+    }
+}
+
+// main demo loop
+function loop() {
+    // this function will run endlessly with requestAnimationFrame
+    requestAnimFrame( loop );
+    
+    // increase the hue to get different colored fireworks over time
+    hue += 0.5;
+    
+    // normally, clearRect() would be used to clear the canvas
+    // we want to create a trailing effect though
+    // setting the composite operation to destination-out will allow us to clear the canvas at a specific opacity, rather than wiping it entirely
+    ctx.globalCompositeOperation = 'destination-out';
+    // decrease the alpha property to create more prominent trails
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect( 0, 0, cw, ch );
+    // change the composite operation back to our main mode
+    // lighter creates bright highlight points as the fireworks and particles overlap each other
+    ctx.globalCompositeOperation = 'lighter';
+    
+    // loop over each firework, draw it, update it
+    var i = fireworks.length;
+    while( i-- ) {
+        fireworks[ i ].draw();
+        fireworks[ i ].update( i );
+    }
+    
+    // loop over each particle, draw it, update it
+    var i = particles.length;
+    while( i-- ) {
+        particles[ i ].draw();
+        particles[ i ].update( i );
+    }
+    
+    // launch fireworks automatically to random coordinates, when the mouse isn't down
+    if( timerTick >= timerTotal ) {
+        if( !mousedown ) {
+            // start the firework at the bottom middle of the screen, then set the random target coordinates, the random y coordinates will be set within the range of the top half of the screen
+            fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
+            timerTick = 0;
+        }
+    } else {
+        timerTick++;
+    }
+    
+    // limit the rate at which fireworks get launched when mouse is down
+    if( limiterTick >= limiterTotal ) {
+        if( mousedown ) {
+            // start the firework at the bottom middle of the screen, then set the current mouse coordinates as the target
+            fireworks.push( new Firework( cw / 2, ch, mx, my ) );
+            limiterTick = 0;
+        }
+    } else {
+        limiterTick++;
+    }
+}
+
+
+
+
+
+
+var flyingMen = [];
+var text = `&#9734;`; 
+var button = document.getElementById('btn');
+text.value = "0";
+//emoji object
+  function emoji(face, startx, starty, flour, fs, flyUpMax) {
+    this.isAlive = true;
+    this.face = face;
+    this.x = startx;
+    this.y = starty;
+    this.flourLevel = flour;
+    this.increment = -Math.floor((Math.random()*flyUpMax)+10);
+    this.xincrement = Math.floor((Math.random()*10)+1);
+    this.xincrement *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+    this.element = document.createElement('div');
+    this.element.innerHTML = face;
+    this.element.style.position = "absolute";
+    this.element.style.fontSize = fs + "px";
+    this.element.style.color = "yellow";
+    document.getElementById("fa").appendChild(this.element);
+
+    this.refresh = function(){
+      if (this.isAlive) {
+        //------Y axis-----
+        
+        this.y += this.increment;
+        this.x += this.xincrement;
+        this.increment += 0.25;
+        
+        if (this.y >= this.flourLevel) {
+          if (this.increment <=5) {
+            this.isAlive = false;
+          }
+         this.increment = -this.increment + 5;
+        }
+        
+        this.element.style.transform = "translate(" + this.x + "px, " + this.y + "px)";
+      } else {
+        this.element.style.transform = "translate(px, px)";
+      }
+    }
+  }
+
+
+
+
+function startAnimation(){
+    console.log("satrt");
+  
+  setTimeout(function(){
+   
+    
+    goB();
+  }, 600); 
+}
+
+function goB() {
+const largeurEcran = window.innerWidth;
+const hauteurEcran = window.innerHeight;
+  var xv = largeurEcran/2;
+  var yv = 470;
+  var fl = hauteurEcran;
+  console.log(fl);
+  // var face = '*';
+  // var face = '&#9734;';
+  // var face  = '&#127775;';
+  var face = '&#9733;';
+  for (var i = 0; i < 80; i++) {
+    var coolGuy = new emoji(face, xv, yv, fl, 10, 26);
+    flyingMen.push(coolGuy);
+  }
+} 
+
+
+//Rendering
+function render() {
+  for (var i = 0; i < flyingMen.length; i++) {
+    if (flyingMen[i].isAlive == true) {
+      flyingMen[i].refresh();
+    } else {
+      flyingMen[i].element.remove();
+      flyingMen.splice(i, 1);
+    }
+  }
+  requestAnimationFrame(render);
+}
+render();
+
+</script>
+
+</body>
+</html>

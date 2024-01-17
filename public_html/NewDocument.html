@@ -1,0 +1,1090 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mon Compte</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+</head>
+<body>
+<style>
+
+body
+{
+     margin: 0;
+          padding: 0;
+            overflow-x: hidden;
+ 
+          
+          height: 100vh;
+}
+header
+{
+     position: absolute; top: 0; bottom: 0; width: 100%;
+     height: 60px;
+     background-color: rgba(255, 255, 255, 0.8);
+    
+}
+
+.container {
+  background-color: rgba(95, 68, 155,0);
+   position: absolute; top: 7%; bottom: 0; width: 100% ;height:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}   
+
+
+
+
+
+#ulNav
+{
+    display:flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+
+}
+
+.link
+{
+    margin:10px;
+     list-style: none;
+
+} 
+   .link a {
+    text-decoration: none; /* Supprimer le soulignement */
+    color: inherit; /* Utiliser la couleur héritée du parent (peut être définie sur "inherit" ou sur la couleur de votre choix) */
+     font-family: 'Futura', sans-serif;
+}
+
+      @font-face {
+          font-family: 'Hakuna';
+          src: url('font/Hakuna Regular.ttf') format('truetype');
+        }
+        
+        @font-face {
+          font-family: 'Futura';
+          src: url('font/Futura Bold.otf') format('opentype');
+        }
+        
+        #Conec
+{
+     margin-left: auto;
+}
+
+
+#map {
+ position: absolute; top: 0; bottom: 0; width: 100%; height: 100%;
+}
+
+         #secondContent
+        {
+            position:absolute;
+            left:50%;
+            top:50%;
+            width: 0%;
+            height: 0%;
+            transform: translate(-50%, -50%); 
+             justify-content: center;
+             align-items:center;
+             
+            border-radius: 33px;
+          
+
+            flex-direction :column;
+            display:none;
+           
+          
+              font-family: 'Futura', sans-serif;
+              padding : 30px;
+               transition: width 2s linear;
+              
+        }
+
+
+        #mainContent
+        {
+            position:absolute;
+            left:50%;
+            top:50%;
+            width: 80%;
+            height: 70%;
+            transform: translate(-50%, -50%); 
+             justify-content: center;
+             
+            border-radius: 33px;
+            background: rgba(255, 255, 255, 0.63);
+            display:flex;
+            flex-direction :column;
+           
+          
+              font-family: 'Futura', sans-serif;
+              padding : 30px;
+             
+        }
+        
+          .inp::placeholder {
+            color: #959292; /* Couleur du placeholder */
+        }
+
+        .inp
+        {
+            border-radius: 17px;
+            border: 5px solid #D9D9D9;
+            background: #FFF;
+             font-family: 'Futura', sans-serif;
+             color: black;
+            font-size: 20px;
+            margin:10px;
+            width: 35%;
+            padding: 10px;
+        }
+        
+        #inputDetail::placeholder
+        {
+            color:#959292 ;
+        }
+        #inputDetail
+        {
+             border-radius: 17px;
+            border: 5px solid #D9D9D9;
+            background: #FFF;
+             font-family: 'Futura', sans-serif;
+             color: black;
+            font-size: 20px;
+            margin:10px;
+            width: 95%;
+            padding: 10px;
+        }
+        
+        h1
+        {
+            margin:10px;
+        }
+        
+        #buttonBar
+        {
+             padding: 10px;
+            display:flex;
+             margin:10px;
+              width: 95%;
+              justify-content: space-between;
+            
+        }
+        
+        #addFic
+        {
+             border-radius: 17px;
+              font-size: 20px;
+           border: none;
+           
+             font-family: 'Futura', sans-serif;
+             background: #00B91E;
+            color:white;
+               
+                padding: 10px;
+        }
+        
+        #valider
+        {
+             border-radius: 17px;
+              font-size: 20px;
+            background: #00B91E;
+            color:white;
+             font-family: 'Futura', sans-serif;
+             border:none;
+              padding: 10px 40px 10px 40px;
+        }
+        
+        #valider:hover
+        {
+            background-color: #339542;
+            cursor:pointer;
+        }
+        
+        #addFic:hover
+        {
+            background-color: #339542;
+            cursor:pointer;
+        }
+        
+        .Document
+{
+            background-color:white;
+            border-radius:25px;
+            font-family: 'Futura', sans-serif;
+          
+          
+            padding:20px;
+            position:relative;
+            margin:20px 10px 10px 10px;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+            display:flex;
+            flex-direction:column;
+            align-items :center;
+}
+
+.Document h1
+{
+    margin-top:0px;
+    color: #00B91E;
+}
+
+#goToDoc
+{
+    
+             border-radius: 17px;
+              font-size: 20px;
+            background: #00B91E;
+            color:white;
+             font-family: 'Futura', sans-serif;
+             border:none;
+              padding: 10px 40px 10px 40px;
+              margin-bottom:10px;
+}
+
+#goToDoc:hover {
+    background-color: #339542;
+    cursor:pointer;
+}
+
+
+  #Icone
+        {
+            position :absolute;
+            right:0%;
+            bottom:2px;
+            transform: translateX(-15%); 
+            display:flex;
+            opacity:0.5;
+              margin:0px;
+        }
+        
+        #Icone img
+        {
+            cursor: pointer;
+        }
+        
+          #retour
+          {
+              width:40%;
+              margin:10px;
+               border-radius: 17px;
+            background: white;
+            color:black;
+             font-family: 'Futura', sans-serif;
+             border:none;
+             margin-top:40px;
+             padding :10px 20px 10px 20px;
+             font-size:28px;
+              margin-bottom:40px;
+          }
+          #retour:hover
+          {
+              background : #ede8e8;
+          }
+          
+          
+          #message
+          {
+               font-family: 'Futura', sans-serif;
+               font-size:28px;
+               margin:10px;
+               text-align:center;
+               
+              
+          }
+          #mesPoint
+          {
+               font-family: 'Futura', sans-serif;
+               font-size:28px;
+                 margin: 0px;
+               
+          }
+          
+              #point
+          {
+                  font-family: 'Futura', sans-serif;
+                  font-size:28px;
+                  margin: 0px;
+                  animation: scroll 0.5s linear paused;
+               
+          }
+          
+          @keyframes scroll {
+    0% {
+        transform: translateY(0%);
+    }
+    
+    100% {
+        transform: translateY(150%);
+    }
+    
+
+}
+
+#scrollBox
+{
+    overflow: hidden;
+}
+
+
+
+</style>
+
+<div id="map"></div>
+   <header>
+        <nav>
+            <ul id = "ulNav">
+                <li class = "link"><a href="index.html">Accueil</a></li>
+                <li class = "link"><a href="index.html#p2">Voir la carte </a></li>
+                <li  class = "link"><a href="#">Contact</a></li>
+                <li class = "link" id ="Conec"><a href="loginPage.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+     <div class='container'>
+    <div id='fa' style='height:100%; width:100%;'></div>
+  </div>
+  <canvas id='canvas'></canvas> 
+
+    <div id ="mainContent">
+        <h1>Ajouter un document</h1>
+         <input class = "inp" id= "titre" type="text"  name="TitreDoc" placeholder="Titre">
+            <textarea id="inputDetail" name="message" rows="7" cols="50" placeholder="Description"></textarea>
+            <div id = buttonBar>
+                <input type="file" id="fileInput" style="display: none;">
+                <button id = "addFic">Ajouter un fichier</button>
+                <button id = "valider">Valider</button>
+            </div>
+    </div>
+    <div id = "secondContent">
+          <p id = "message"> Votre document a bien été enregistré !</p>
+             <div id ="scrollBox">
+                <p id = "point"> +2</p>
+            </div>
+            <p id = "mesPoint">65 points</p>
+            
+        <div class="Document">
+                            <h1 id = "titre2">Mairie de bayangam</h1>
+                            <p id = "desc">Photo de l'entrée de la mairie</p>
+                        
+                                <div id="Icone">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/Heart.svg" alt="Icone like">
+                                    <img style="height: 20px; margin-left: 3px;" src="img/cross.svg" alt="Icone croix">
+                                </div>
+                            
+                                      <a id = "mylink" href="https://firebasestorage.googleapis.com/v0/b/myvillage-f841c.appspot.com/o/Documents%2FBayangam%2F7-Maire%20de%20Bayangam.jpg?alt=media&amp;token=e41bbba6-8671-4861-a8c9-76a3174890ba" target="_blank">
+                                        <button id="goToDoc">Maire de Bayangam.jpg</button>
+                                      </a>
+                                    </div>
+                
+                 <button id = "retour">Retourner au menu</button> 
+                
+    </div>
+
+
+    
+       <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js"></script>
+
+
+  <script type="module">
+
+        var queryString = window.location.search;
+        var params = new URLSearchParams(queryString);
+        var nom = params.get('nom');
+      
+
+
+ var storedUserEmail = localStorage.getItem("userEmailMyVillage");
+ console.log(storedUserEmail);
+ 
+  var maDiv = document.getElementById("map");
+
+          var MyZoom = 11.52;
+          var MyLat = 11.627;
+          var MyLong = 3.893;
+
+          mapboxgl.accessToken = 'pk.eyJ1Ijoiam9vc2h1dWE4IiwiYSI6ImNsa3llZmczbzFjcGczZnIwajNlbW9uZXQifQ.cxOAguOtq_SxbPJW3itr2Q';
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: 'mapbox://styles/jooshuua8/cllhv6isr015q01pi0xq9e2ck',
+              zoom: MyZoom,
+              center :[MyLat,MyLong]
+          });
+          
+          
+                            function resizeMap()
+{
+     const hauteurDeLaPage = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight,
+      document.body.clientHeight,
+      document.documentElement.clientHeight
+    );
+    
+    console.log("Hauteur totale de la page (y compris le scroll) : " + hauteurDeLaPage + " pixels");
+    maDiv.style.height = hauteurDeLaPage+"px";
+       map.resize();
+}
+
+   resizeMap();
+          
+window.addEventListener('resize', function () {
+   
+   
+    resizeMap();
+    console.log("resize");
+   
+
+});
+
+          
+          
+var user;
+        
+        function getUser(Email) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "getUser.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                      
+                         user = JSON.parse(xhr.responseText);
+                        if (user.length > 0) {
+
+                         console.log(user);
+                     
+                         
+                          const liElement = document.getElementById('Conec');
+                            const aElement = liElement.querySelector('a');
+                            aElement.textContent = user[0].Username;
+                            aElement.href = 'monCompte.html';
+                            // Sélectionnez les éléments avec la classe "note"
+                           
+                            console.log(user);
+                            
+        
+                           
+
+                        
+                        } else {
+                            console.log("Aucune traduction trouvée pour cette langue.");
+                        }
+                    }
+                };
+                xhr.send("langue=" + Email);
+            }
+            getUser(storedUserEmail);
+
+
+        const fileInput = document.getElementById('fileInput');
+        const chooseFileButton = document.getElementById('addFic');
+        const validerButton = document.getElementById('valider');
+
+ var fic =0;
+        chooseFileButton.addEventListener('click', () => {
+            fileInput.click(); 
+            fic = 1;
+        });
+
+      
+        fileInput.addEventListener('change', () => {
+            const fileName = fileInput.files[0].name;
+            chooseFileButton.textContent = fileName;
+            
+
+           
+        });
+        
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+        import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
+        
+          const firebaseConfig = {
+          apiKey: "AIzaSyCjoNsmpZZdE-Qdx05AdDR_yksQteIdgzA",
+          authDomain: "myvillage-f841c.firebaseapp.com",
+          databaseURL: "https://myvillage-f841c-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "myvillage-f841c",
+          storageBucket: "myvillage-f841c.appspot.com",
+          messagingSenderId: "1064715931888",
+          appId: "1:1064715931888:web:ee0f7112d22a8e3596f235",
+          measurementId: "G-XZHB36B75E"
+        };
+
+        // Initialisez Firebase
+        const app = initializeApp(firebaseConfig);
+        
+        
+         validerButton.addEventListener('click', () => {
+             
+           enregistrerDoc();
+           afficheResult();
+           ajouterPoints(user[0].Email,15);
+             
+         });
+         
+          function saveDoc(id)
+             {
+                 
+             
+                        const file = fileInput.files[0];
+                        if (file) {
+                            // Référence à l'emplacement de stockage Firebase où vous souhaitez enregistrer le fichier
+                          
+                         const storage = getStorage(app);
+                          const storageRef = ref(storage, 'Documents/'+nom+"/"+id+"-"+ file.name);
+            
+                            uploadBytes(storageRef, file).then((snapshot) => {
+                        console.log('Téléchargement réussi !');
+                      
+                    }).catch((error) => {
+                        console.error('Erreur lors du téléchargement :', error);
+                        alert('Erreur lors du téléchargement : ' + error.message);
+                    });
+                }
+           
+            }
+
+function enregistrerDoc() {
+    console.log("ajout de la traduction");
+
+    var Titre = document.getElementById('titre').value;
+    var description = document.getElementById('inputDetail').value;
+    var userId = Number(user[0].Id);
+    var langue = nom;
+    
+
+
+  
+    var formData = new FormData();
+    formData.append('Titre', Titre);
+    formData.append('Contenu', description);
+    formData.append('userId', userId);
+    formData.append('langue', langue);
+    if(fic == 1)
+    {
+         formData.append('fic',fileInput.files[0].name);
+    }
+    else
+    {
+         formData.append('fic',"nothing");
+    }
+  
+   
+    
+
+    axios.post('addDoc.php', formData)
+        .then(function (response) {
+           
+            console.log(response.data);
+            var nouvelEnregistrementId = parseInt(response.data.match(/\d+/)[0]);
+            console.log("ID de mon nouvel enregistrement : " + nouvelEnregistrementId);
+
+           // ajouterPoints(user[0].Email, scorePlus);
+            if(fic == 1)
+            {
+                console.log("saveFirbase");
+                saveDoc(nouvelEnregistrementId);
+            }
+           
+        })
+        .catch(function (error) {
+            // Gestion des erreurs
+            console.error('Erreur lors de l\'envoi des données :', error);
+            alert("Une erreur s'est produite.");
+        });
+        
+        
+}
+
+        var scorePlus = 15;
+        const mp = document.getElementById('mesPoint');
+           var intervalScore;
+
+       function afficheResult()
+        {
+            const SC = document.getElementById('secondContent');
+            const MC = document.getElementById('mainContent');
+            const point = document.getElementById('point');
+            const titre = document.getElementById('titre');
+            const desc = document.getElementById('inputDetail');
+            
+            const titre2 = document.getElementById('titre2');
+            const desc2 = document.getElementById('desc');
+             const doc = document.getElementById('goToDoc');
+            
+            const btFic = document.getElementById('mylink');
+            
+            if(fic == 0)
+            {
+                btFic.style.display="none";
+            }
+            else
+            {
+              doc.innerHTML =fileInput.files[0].name;
+              var url = URL.createObjectURL(fileInput.files[0]);
+              btFic.href = url;
+            }
+            
+            titre2.innerHTML = titre.value;
+            desc2.innerHTML = desc.value;
+            
+        
+             point.textContent ="+"+scorePlus
+                mp.textContent = user[0].Score +"points";
+                
+            document.body.style.overflow = "hidden";
+            MC.style.display = "none";
+            SC.style.display="flex";
+            SC.style.height ="70%";
+            SC.style.width ="80%";
+            
+              setTimeout(ajoutPoint, 1000); 
+                   setTimeout(() => {
+                   startAnimation();
+            }, 300);
+                
+           
+        }
+        
+         function ajoutPoint() {
+          const point = document.getElementById('point');
+        
+           point.style.animationPlayState = 'running';
+           setTimeout(() => {
+                 point.style.transform = "translateY(150%)";
+                 intervalScore = setInterval(augmenterScore, 100);
+            }, 500);
+
+      }
+      
+       function augmenterScore()
+      {
+          
+          if(scorePlus > 0)
+          {
+              let s = parseInt(user[0].Score) +1;
+              user[0].Score = s;
+              
+               mp.textContent = s +" points";
+               scorePlus--;
+          }
+          else
+          {
+              clearInterval(intervalScore);
+          }
+      }
+      
+      function ajouterPoints(email, pointsToAdd) {
+  // Créez un objet de données à envoyer au serveur
+  const data = {
+    email: email,
+    pointsToAdd: pointsToAdd
+  };
+
+  // Effectuez une requête AJAX POST vers le fichier PHP
+  $.ajax({
+    type: "POST",
+    url: "addPoint.php", // Remplacez par le chemin de votre fichier PHP
+    data: data,
+    success: function(response) {
+      // Réponse du serveur en cas de succès
+      console.log(response);
+      // Vous pouvez effectuer d'autres actions ici en fonction de la réponse
+    },
+    error: function(error) {
+      // Gestion des erreurs en cas d'échec de la requête
+      console.error("Erreur de requête AJAX : " + error.statusText);
+    }
+  });
+}
+
+  function retourMenu()
+        {
+             const url = `monVillage.html?nom=${encodeURIComponent(nom)}`;
+             window.location.href = url;
+        }
+
+  document.getElementById('retour').addEventListener('click', retourMenu);
+
+
+
+
+
+
+
+     
+</script>
+
+<script>
+
+
+
+window.requestAnimFrame = ( function() {
+    return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                function( callback ) {
+                    window.setTimeout( callback, 1000 / 60 );
+                };
+})();
+
+// now we will setup our basic variables for the demo
+var canvas = document.getElementById( 'canvas' ),
+        ctx = canvas.getContext( '2d' ),
+        // full screen dimensions
+        cw = window.innerWidth,
+        ch = window.innerHeight,
+        // firework collection
+        fireworks = [],
+        // particle collection
+        particles = [],
+        // starting hue
+        hue = 120,
+        // when launching fireworks with a click, too many get launched at once without a limiter, one launch per 5 loop ticks
+        limiterTotal = 5,
+        limiterTick = 0,
+        // this will time the auto launches of fireworks, one launch per 80 loop ticks
+        timerTotal = 80,
+        timerTick = 0,
+        mousedown = false,
+        // mouse x coordinate,
+        mx,
+        // mouse y coordinate
+        my;
+        
+// set canvas dimensions
+canvas.width = cw;
+canvas.height = ch;
+
+// now we are going to setup our function placeholders for the entire demo
+
+// get a random number within a range
+function random( min, max ) {
+    return Math.random() * ( max - min ) + min;
+}
+
+// calculate the distance between two points
+function calculateDistance( p1x, p1y, p2x, p2y ) {
+    var xDistance = p1x - p2x,
+            yDistance = p1y - p2y;
+    return Math.sqrt( Math.pow( xDistance, 2 ) + Math.pow( yDistance, 2 ) );
+}
+
+// create firework
+function Firework( sx, sy, tx, ty ) {
+    // actual coordinates
+    this.x = sx;
+    this.y = sy;
+    // starting coordinates
+    this.sx = sx;
+    this.sy = sy;
+    // target coordinates
+    this.tx = tx;
+    this.ty = ty;
+    // distance from starting point to target
+    this.distanceToTarget = calculateDistance( sx, sy, tx, ty );
+    this.distanceTraveled = 0;
+    // track the past coordinates of each firework to create a trail effect, increase the coordinate count to create more prominent trails
+    this.coordinates = [];
+    this.coordinateCount = 3;
+    // populate initial coordinate collection with the current coordinates
+    while( this.coordinateCount-- ) {
+        this.coordinates.push( [ this.x, this.y ] );
+    }
+    this.angle = Math.atan2( ty - sy, tx - sx );
+    this.speed = 2;
+    this.acceleration = 1.05;
+    this.brightness = random( 50, 70 );
+    // circle target indicator radius
+    this.targetRadius = 1;
+}
+
+// update firework
+Firework.prototype.update = function( index ) {
+    // remove last item in coordinates array
+    this.coordinates.pop();
+    // add current coordinates to the start of the array
+    this.coordinates.unshift( [ this.x, this.y ] );
+    
+    // cycle the circle target indicator radius
+    if( this.targetRadius < 8 ) {
+        this.targetRadius += 0.3;
+    } else {
+        this.targetRadius = 1;
+    }
+    
+    // speed up the firework
+    this.speed *= this.acceleration;
+    
+    // get the current velocities based on angle and speed
+    var vx = Math.cos( this.angle ) * this.speed,
+            vy = Math.sin( this.angle ) * this.speed;
+    // how far will the firework have traveled with velocities applied?
+    this.distanceTraveled = calculateDistance( this.sx, this.sy, this.x + vx, this.y + vy );
+    
+    // if the distance traveled, including velocities, is greater than the initial distance to the target, then the target has been reached
+    if( this.distanceTraveled >= this.distanceToTarget ) {
+        createParticles( this.tx, this.ty );
+        // remove the firework, use the index passed into the update function to determine which to remove
+        fireworks.splice( index, 1 );
+    } else {
+        // target not reached, keep traveling
+        this.x += vx;
+        this.y += vy;
+    }
+}
+
+// draw firework
+Firework.prototype.draw = function() {
+    ctx.beginPath();
+    // move to the last tracked coordinate in the set, then draw a line to the current x and y
+    ctx.moveTo( this.coordinates[ this.coordinates.length - 1][ 0 ], this.coordinates[ this.coordinates.length - 1][ 1 ] );
+    ctx.lineTo( this.x, this.y );
+    ctx.strokeStyle = 'hsl(' + hue + ', 100%, ' + this.brightness + '%)';
+    ctx.stroke();
+    
+    ctx.beginPath();
+    // draw the target for this firework with a pulsing circle
+    ctx.arc( this.tx, this.ty, this.targetRadius, 0, Math.PI * 2 );
+    ctx.stroke();
+}
+
+// create particle
+function Particle( x, y ) {
+    this.x = x;
+    this.y = y;
+    // track the past coordinates of each particle to create a trail effect, increase the coordinate count to create more prominent trails
+    this.coordinates = [];
+    this.coordinateCount = 5;
+    while( this.coordinateCount-- ) {
+        this.coordinates.push( [ this.x, this.y ] );
+    }
+    // set a random angle in all possible directions, in radians
+    this.angle = random( 0, Math.PI * 2 );
+    this.speed = random( 1, 10 );
+    // friction will slow the particle down
+    this.friction = 0.95;
+    // gravity will be applied and pull the particle down
+    this.gravity = 1;
+    // set the hue to a random number +-20 of the overall hue variable
+    this.hue = random( hue - 20, hue + 20 );
+    this.brightness = random( 50, 80 );
+    this.alpha = 1;
+    // set how fast the particle fades out
+    this.decay = random( 0.015, 0.03 );
+}
+
+// update particle
+Particle.prototype.update = function( index ) {
+    // remove last item in coordinates array
+    this.coordinates.pop();
+    // add current coordinates to the start of the array
+    this.coordinates.unshift( [ this.x, this.y ] );
+    // slow down the particle
+    this.speed *= this.friction;
+    // apply velocity
+    this.x += Math.cos( this.angle ) * this.speed;
+    this.y += Math.sin( this.angle ) * this.speed + this.gravity;
+    // fade out the particle
+    this.alpha -= this.decay;
+    
+    // remove the particle once the alpha is low enough, based on the passed in index
+    if( this.alpha <= this.decay ) {
+        particles.splice( index, 1 );
+    }
+}
+
+// draw particle
+Particle.prototype.draw = function() {
+    ctx. beginPath();
+    // move to the last tracked coordinates in the set, then draw a line to the current x and y
+    ctx.moveTo( this.coordinates[ this.coordinates.length - 1 ][ 0 ], this.coordinates[ this.coordinates.length - 1 ][ 1 ] );
+    ctx.lineTo( this.x, this.y );
+    ctx.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
+    ctx.stroke();
+}
+
+// create particle group/explosion
+function createParticles( x, y ) {
+    // increase the particle count for a bigger explosion, beware of the canvas performance hit with the increased particles though
+    var particleCount = 30;
+    while( particleCount-- ) {
+        particles.push( new Particle( x, y ) );
+    }
+}
+
+// main demo loop
+function loop() {
+    // this function will run endlessly with requestAnimationFrame
+    requestAnimFrame( loop );
+    
+    // increase the hue to get different colored fireworks over time
+    hue += 0.5;
+    
+    // normally, clearRect() would be used to clear the canvas
+    // we want to create a trailing effect though
+    // setting the composite operation to destination-out will allow us to clear the canvas at a specific opacity, rather than wiping it entirely
+    ctx.globalCompositeOperation = 'destination-out';
+    // decrease the alpha property to create more prominent trails
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect( 0, 0, cw, ch );
+    // change the composite operation back to our main mode
+    // lighter creates bright highlight points as the fireworks and particles overlap each other
+    ctx.globalCompositeOperation = 'lighter';
+    
+    // loop over each firework, draw it, update it
+    var i = fireworks.length;
+    while( i-- ) {
+        fireworks[ i ].draw();
+        fireworks[ i ].update( i );
+    }
+    
+    // loop over each particle, draw it, update it
+    var i = particles.length;
+    while( i-- ) {
+        particles[ i ].draw();
+        particles[ i ].update( i );
+    }
+    
+    // launch fireworks automatically to random coordinates, when the mouse isn't down
+    if( timerTick >= timerTotal ) {
+        if( !mousedown ) {
+            // start the firework at the bottom middle of the screen, then set the random target coordinates, the random y coordinates will be set within the range of the top half of the screen
+            fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
+            timerTick = 0;
+        }
+    } else {
+        timerTick++;
+    }
+    
+    // limit the rate at which fireworks get launched when mouse is down
+    if( limiterTick >= limiterTotal ) {
+        if( mousedown ) {
+            // start the firework at the bottom middle of the screen, then set the current mouse coordinates as the target
+            fireworks.push( new Firework( cw / 2, ch, mx, my ) );
+            limiterTick = 0;
+        }
+    } else {
+        limiterTick++;
+    }
+}
+
+
+
+
+
+
+var flyingMen = [];
+var text = `&#9734;`; 
+var button = document.getElementById('btn');
+text.value = "0";
+//emoji object
+  function emoji(face, startx, starty, flour, fs, flyUpMax) {
+    this.isAlive = true;
+    this.face = face;
+    this.x = startx;
+    this.y = starty;
+    this.flourLevel = flour;
+    this.increment = -Math.floor((Math.random()*flyUpMax)+10);
+    this.xincrement = Math.floor((Math.random()*10)+1);
+    this.xincrement *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+    this.element = document.createElement('div');
+    this.element.innerHTML = face;
+    this.element.style.position = "absolute";
+    this.element.style.fontSize = fs + "px";
+    this.element.style.color = "yellow";
+    document.getElementById("fa").appendChild(this.element);
+
+    this.refresh = function(){
+      if (this.isAlive) {
+        //------Y axis-----
+        
+        this.y += this.increment;
+        this.x += this.xincrement;
+        this.increment += 0.25;
+        
+        if (this.y >= this.flourLevel) {
+          if (this.increment <=5) {
+            this.isAlive = false;
+          }
+         this.increment = -this.increment + 5;
+        }
+        
+        this.element.style.transform = "translate(" + this.x + "px, " + this.y + "px)";
+      } else {
+        this.element.style.transform = "translate(px, px)";
+      }
+    }
+  }
+
+
+
+
+function startAnimation(){
+    console.log("satrt");
+  
+  setTimeout(function(){
+   
+    
+    goB();
+  }, 600); 
+}
+
+function goB() {
+const largeurEcran = window.innerWidth;
+const hauteurEcran = window.innerHeight;
+  var xv = largeurEcran/2;
+  var yv = 470;
+  var fl = hauteurEcran;
+  console.log(fl);
+  // var face = '*';
+  // var face = '&#9734;';
+  // var face  = '&#127775;';
+  var face = '&#9733;';
+  for (var i = 0; i < 80; i++) {
+    var coolGuy = new emoji(face, xv, yv, fl, 10, 26);
+    flyingMen.push(coolGuy);
+  }
+} 
+
+
+//Rendering
+function render() {
+  for (var i = 0; i < flyingMen.length; i++) {
+    if (flyingMen[i].isAlive == true) {
+      flyingMen[i].refresh();
+    } else {
+      flyingMen[i].element.remove();
+      flyingMen.splice(i, 1);
+    }
+  }
+  requestAnimationFrame(render);
+}
+render();
+
+</script>
+
+
+
+
+</body>
+</html>

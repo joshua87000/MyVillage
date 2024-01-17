@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Récupérer un fichier audio depuis Firebase</title>
+</head>
+<body>
+    <h1>Récupérer un fichier audio depuis Firebase Storage</h1>
+
+    <!-- Formulaire pour spécifier le nom du fichier audio -->
+   
+        <label for="fileName">Nom du fichier audio:</label>
+        <input type="text" id="fileName" name="fileName" required>
+        <button id="test">Lire</button>
+  
+
+    <!-- Ajoutez ici vos scripts Firebase -->
+    <script type="module">
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+        import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCjoNsmpZZdE-Qdx05AdDR_yksQteIdgzA",
+          authDomain: "myvillage-f841c.firebaseapp.com",
+          databaseURL: "https://myvillage-f841c-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "myvillage-f841c",
+          storageBucket: "myvillage-f841c.appspot.com",
+          messagingSenderId: "1064715931888",
+          appId: "1:1064715931888:web:ee0f7112d22a8e3596f235",
+          measurementId: "G-XZHB36B75E"
+        };
+
+        // Initialisez Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Éléments du DOM
+        const fileForm = document.getElementById('test');
+        const fileNameInput = document.getElementById('fileName');
+        console.log(fileForm);
+        
+        fileForm.addEventListener('click',async () => {
+console.log("lire");
+            
+            const fileName = fileNameInput.value;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, 'enregistrements/' + fileName);
+
+            try {
+                // Obtenez l'URL de téléchargement du fichier audio
+                const downloadURL = await getDownloadURL(storageRef);
+
+                // Créez un nouvel élément audio pour la lecture
+                const audioPlayer = new Audio(downloadURL);
+
+                audioPlayer.addEventListener('ended', () => {
+                console.log('Lecture audio terminée.');
+              
+            });
+                audioPlayer.play();
+            } catch (error) {
+                console.error('Erreur lors de la récupération du fichier audio:', error);
+            }
+        });
+    </script>
+</body>
+</html>
